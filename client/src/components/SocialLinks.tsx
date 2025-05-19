@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { SOCIAL_LINKS } from '@/lib/constants';
+import { SOCIAL_LINKS, CONTACT_EMAIL } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 
 interface SocialLinksProps {
