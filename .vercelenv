@@ -1,0 +1,6 @@
+# Dummy DATABASE_URL for build-time only
+
+# This won't be used in production, you must set DATABASE_URL in Vercel environment variables
+
+DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+NODE_ENV=development
