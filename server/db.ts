@@ -5,18 +5,22 @@ import * as schema from "@shared/schema";
 
 neonConfig.webSocketConstructor = ws;
 
-// In development mode, use a mock database connection if DATABASE_URL is not set
+// Handle database connection based on environment
 const isDevelopment = process.env.NODE_ENV === "development";
-const databaseUrl =
-  process.env.DATABASE_URL ||
-  (isDevelopment
-    ? "postgresql://user:password@localhost:5432/mydb"
-    : undefined);
+const isServerless = process.env.VERCEL === "1";
 
-if (!databaseUrl) {
-  throw new Error(
-    "DATABASE_URL must be set. Did you forget to provision a database?"
-  );
+// For Vercel environment or any other serverless platform
+const databaseUrl = process.env.DATABASE_URL;
+
+// Only throw error if not in development and no DATABASE_URL
+if (!databaseUrl && !isDevelopment) {
+  console.error("Missing DATABASE_URL in production environment");
+  // In serverless, we don't want to crash the entire app
+  if (!isServerless) {
+    throw new Error(
+      "DATABASE_URL must be set in production. Did you forget to provision a database?"
+    );
+  }
 }
 
 export const pool = new Pool({ connectionString: databaseUrl });

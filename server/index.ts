@@ -57,10 +57,18 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on port 5000 (or a different port if specified)
-  // this serves both the API and the client.
-  const port = process.env.PORT ? parseInt(process.env.PORT) : 5001; // Changed to default to 5001
-  server.listen(port, () => {
-    log(`serving on port ${port}`);
-  });
+  // Handle server startup based on environment
+  const isVercel = process.env.VERCEL === "1";
+
+  if (!isVercel) {
+    // For local development and traditional hosting, listen on a port
+    const port = process.env.PORT ? parseInt(process.env.PORT) : 5001;
+    server.listen(port, () => {
+      log(`serving on port ${port}`);
+    });
+  } else {
+    // For serverless environments like Vercel, we don't need to listen
+    // The server will be handled by the platform
+    log("Running in serverless mode");
+  }
 })();

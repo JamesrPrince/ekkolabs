@@ -10,11 +10,26 @@ async function throwIfResNotOk(res: Response) {
 export async function apiRequest(
   method: string,
   url: string,
-  data?: unknown | undefined,
+  data?: unknown | undefined
 ): Promise<Response> {
-  const res = await fetch(url, {
+  // Get the base URL for API calls
+  const baseUrl =
+    process.env.NODE_ENV === "production"
+      ? window.location.origin // Use the deployed site's origin in production
+      : ""; // Use relative URLs in development
+
+  const fullUrl = `${baseUrl}${url}`;
+
+  const res = await fetch(fullUrl, {
     method,
-    headers: data ? { "Content-Type": "application/json" } : {},
+    headers: data
+      ? {
+          "Content-Type": "application/json",
+          // Add cache control to prevent caching of API responses
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          Pragma: "no-cache",
+        }
+      : {},
     body: data ? JSON.stringify(data) : undefined,
     credentials: "include",
   });
