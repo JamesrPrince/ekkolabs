@@ -23,7 +23,7 @@
   --destructive-foreground: 210 40% 98%;
   --ring: 215 20.2% 65.1%;
   --radius: 0.5rem;
-  
+
   /* Theme specific colors */
   --navy: 222 47% 11%;
   --navy-light: 218 47% 16%;
@@ -72,35 +72,35 @@
   }
 
   .font-mono {
-    font-family: 'Fira Code', monospace;
+    font-family: "Fira Code", monospace;
   }
 }
 
 @layer components {
   /* Animate in effect */
   .animate-in {
-    @apply opacity-0 translate-y-8 transition-all duration-700 ease-out;
+    @apply opacity-0 translate-y-5 transition-all duration-500 ease-custom-ease;
   }
-  
+
   .animate-in.show {
     @apply opacity-100 translate-y-0;
   }
-  
+
   /* Skill bar animation */
   .skill-bar {
     @apply w-0 transition-all duration-1000 ease-out;
   }
-  
+
   /* Active nav link styling */
   .nav-link.active {
     @apply text-[#64FFDA] border-l-[#64FFDA];
   }
-  
+
   /* Project card hover effects */
   .project-card:hover .project-overlay {
     @apply opacity-0;
   }
-  
+
   .project-card:hover .project-details {
     @apply translate-y-0;
   }

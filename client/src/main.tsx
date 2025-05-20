@@ -27,6 +27,22 @@ import {
   faDatabase,
   faUser,
   faNewspaper,
+  faCalendarAlt,
+  faTag,
+  faClock,
+  faSearch,
+  faTimes,
+  faPaperPlane,
+  faArrowRight,
+  faDownload,
+  faChevronDown,
+  faChevronUp,
+  faGraduationCap,
+  faCertificate,
+  faAward,
+  faPlus,
+  faSave,
+  faUpload,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faLinkedinIn,
@@ -60,7 +76,23 @@ library.add(
   faNetworkWired,
   faDatabase,
   faUser,
-  faNewspaper
+  faNewspaper,
+  faCalendarAlt,
+  faTag,
+  faClock,
+  faSearch,
+  faTimes,
+  faPaperPlane,
+  faArrowRight,
+  faDownload,
+  faChevronDown,
+  faChevronUp,
+  faGraduationCap,
+  faCertificate,
+  faAward,
+  faPlus,
+  faSave,
+  faUpload
 );
 
 createRoot(document.getElementById("root")!).render(<App />);

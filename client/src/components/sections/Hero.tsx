@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
 import useIntersectionObserver from "@/hooks/use-intersection-observer";
 import { cn, scrollToSection } from "@/lib/utils";
-import { profile } from "@/data/profile";
-import { Link } from "wouter";
 
 export default function Hero() {
   const { elementRef, isIntersecting } = useIntersectionObserver({
@@ -13,109 +11,57 @@ export default function Hero() {
     <section
       id="hero"
       ref={elementRef}
-      className="min-h-screen flex flex-col items-center justify-between pt-16 pb-8 relative"
+      className="min-h-screen flex flex-col justify-center pt-24 pb-16 bg-[#0A192F] text-left"
     >
-      <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-24 flex-grow flex items-center">
+      <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-24">
         <div>
           <p
             className={cn(
-              "text-[#64FFDA] font-mono mb-4 animate-in",
-              isIntersecting && "show"
-            )}
-          >
-            Hello, my name is
-          </p>
-
-          <h1
-            className={cn(
-              "text-4xl md:text-6xl lg:text-7xl font-bold text-[#CCD6F6] mb-4 animate-in",
+              "text-[#64FFDA] font-mono mb-4 text-base md:text-lg animate-in",
               isIntersecting && "show"
             )}
             style={{ animationDelay: "0.1s" }}
           >
-            {profile.name}
-          </h1>
+            Hi, I'm Ekko.
+          </p>
 
-          <h2
+          <h1
             className={cn(
-              "text-3xl md:text-5xl lg:text-6xl font-bold text-[#8892B0] mb-6 animate-in",
+              "text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#CCD6F6] mb-5 animate-in",
               isIntersecting && "show"
             )}
             style={{ animationDelay: "0.2s" }}
           >
-            {profile.title}
-          </h2>
+            I build things for the web.
+          </h1>
 
           <p
             className={cn(
-              "max-w-2xl text-[#8892B0] text-lg leading-relaxed mb-12 animate-in",
+              "max-w-xl text-[#8892B0] text-base md:text-lg leading-relaxed mb-10 animate-in",
               isIntersecting && "show"
             )}
             style={{ animationDelay: "0.3s" }}
           >
-            {profile.intro}
+            I'm a software engineer specializing in building (and occasionally
+            designing) exceptional digital experiences. Currently, I'm focused
+            on building accessible, human-centered products at Upstatement.
+            {/* This is a placeholder bio, update with actual content if available */}
           </p>
 
           <div
-            className={cn(
-              "animate-in flex flex-wrap gap-4",
-              isIntersecting && "show"
-            )}
+            className={cn("animate-in", isIntersecting && "show")}
             style={{ animationDelay: "0.4s" }}
           >
             <Button
               variant="outline"
               size="lg"
-              onClick={() => scrollToSection("projects")}
-              className="inline-block border border-[#64FFDA] text-[#64FFDA] px-6 py-4 rounded font-mono hover:bg-[#64FFDA]/10 transition-colors duration-300"
+              onClick={() => scrollToSection("contact")}
+              className="border border-[#64FFDA] text-[#64FFDA] px-8 py-4 rounded font-mono text-base hover:bg-[#64FFDA]/10 transition-colors duration-300"
             >
-              View My Work
-            </Button>
-            <Button
-              variant="ghost"
-              size="lg"
-              className="inline-block text-[#8892B0] hover:text-[#64FFDA] hover:bg-[#64FFDA]/5 transition-colors duration-300"
-            >
-              <Link href="/about">
-                <span className="cursor-pointer">About Me</span>
-              </Link>
-            </Button>
-            <Button
-              variant="ghost"
-              size="lg"
-              className="inline-block text-[#8892B0] hover:text-[#64FFDA] hover:bg-[#64FFDA]/5 transition-colors duration-300"
-            >
-              <Link href="/blog">
-                <span className="cursor-pointer">Read My Blog</span>
-              </Link>
+              Get In Touch
             </Button>
           </div>
         </div>
-      </div>
-
-      {/* Scroll indicator */}
-      <div
-        className={cn(
-          "animate-bounce text-[#64FFDA] mb-8 mt-4 cursor-pointer",
-          isIntersecting && "opacity-100",
-          !isIntersecting && "opacity-0"
-        )}
-        onClick={() => scrollToSection("about")}
-        style={{ animationDelay: "1s" }}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M12 5v14M5 12l7 7 7-7" />
-        </svg>
       </div>
     </section>
   );

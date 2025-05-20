@@ -1,12 +1,35 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import SocialLinks from "@/components/SocialLinks";
 import EmailLink from "@/components/EmailLink";
 import Footer from "@/components/Footer";
 import AboutSection from "@/components/sections/About";
 import Skills from "@/components/sections/Skills";
+import Timeline from "@/components/sections/Timeline";
+import Education from "@/components/sections/Education";
+import { Button } from "@/components/ui/button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faDownload,
+  faChevronDown,
+  faChevronUp,
+} from "@fortawesome/free-solid-svg-icons";
+import { RESUME_URL } from "@/lib/constants";
+import { profile } from "@/data/profile";
+import { cn } from "@/lib/utils";
+
+// Define the tabs for the about page
+const tabs = [
+  { id: "overview", label: "Overview" },
+  { id: "skills", label: "Skills" },
+  { id: "experience", label: "Experience" },
+  { id: "education", label: "Education" },
+];
 
 export default function AboutPage() {
+  const [activeTab, setActiveTab] = useState("overview");
+  const [expanded, setExpanded] = useState(false);
+
   // Add scroll animations for elements with animate-in class
   useEffect(() => {
     const handleScroll = () => {
@@ -34,6 +57,15 @@ export default function AboutPage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Navigate to a specific tab section
+  const navigateToSection = (tabId: string) => {
+    setActiveTab(tabId);
+    const element = document.getElementById(tabId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -43,19 +75,110 @@ export default function AboutPage() {
       <main>
         <div className="pt-20">
           <div className="container mx-auto px-4 py-16 md:px-8 lg:px-16 xl:px-24">
-            <h1 className="text-4xl md:text-5xl font-bold text-[#CCD6F6] mb-6">
-              About Me
-            </h1>
-            <p className="text-[#8892B0] text-lg mb-12 max-w-2xl">
-              Learn more about my background, skills, and the journey that led
-              me to where I am today.
-            </p>
+            <div className="md:flex items-end justify-between mb-12">
+              <div>
+                <h1 className="text-4xl md:text-5xl font-bold text-[#CCD6F6] mb-4 animate-in show">
+                  About Me
+                </h1>
+                <p
+                  className="text-[#8892B0] text-lg mb-6 max-w-2xl animate-in show"
+                  style={{ animationDelay: "0.1s" }}
+                >
+                  Learn more about my background, skills, and the journey that
+                  led me to where I am today.
+                </p>
+              </div>
+
+              <Button
+                variant="outline"
+                className="border border-[#64FFDA] text-[#64FFDA] hover:bg-[#64FFDA]/10 px-8 py-2 animate-in show"
+                style={{ animationDelay: "0.2s" }}
+                onClick={() => window.open(RESUME_URL, "_blank")}
+              >
+                <FontAwesomeIcon icon={faDownload} className="mr-2" />
+                Download Resume
+              </Button>
+            </div>
+
+            {/* Tab navigation for larger screens */}
+            <div
+              className="hidden md:flex space-x-6 border-b border-[#1E3A5F] mb-12 animate-in show"
+              style={{ animationDelay: "0.3s" }}
+            >
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  className={cn(
+                    "pb-4 px-2 relative font-medium transition-colors",
+                    activeTab === tab.id
+                      ? "text-[#64FFDA]"
+                      : "text-[#8892B0] hover:text-[#CCD6F6]"
+                  )}
+                  onClick={() => navigateToSection(tab.id)}
+                >
+                  {tab.label}
+                  {activeTab === tab.id && (
+                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#64FFDA]"></span>
+                  )}
+                </button>
+              ))}
+            </div>
+
+            {/* Mobile accordion intro */}
+            <div className="md:hidden mb-8 bg-[#112240] p-4 rounded-lg animate-in show">
+              <div
+                className="flex justify-between items-center"
+                onClick={() => setExpanded(!expanded)}
+              >
+                <h3 className="text-lg font-bold text-[#CCD6F6]">
+                  Quick Profile
+                </h3>
+                <FontAwesomeIcon
+                  icon={expanded ? faChevronUp : faChevronDown}
+                  className="text-[#64FFDA]"
+                />
+              </div>
+
+              {expanded && (
+                <div className="mt-4 text-[#8892B0]">
+                  <p className="mb-4">{profile.intro}</p>
+                  <div className="flex justify-between">
+                    <div>
+                      <p className="text-xs text-[#CCD6F6] mb-1">Based in</p>
+                      <p className="text-sm">{profile.title}</p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-[#64FFDA] hover:bg-[#64FFDA]/10 text-xs"
+                      onClick={() => window.open(RESUME_URL, "_blank")}
+                    >
+                      <FontAwesomeIcon icon={faDownload} className="mr-1" />
+                      Resume
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* We'll reuse the existing About component but without the section title */}
-        <AboutSection standalone={true} />
-        <Skills standalone={true} />
+        {/* Content sections */}
+        <div id="overview">
+          <AboutSection standalone={true} />
+        </div>
+
+        <div id="skills">
+          <Skills standalone={true} />
+        </div>
+
+        <div id="experience">
+          <Timeline standalone={true} />
+        </div>
+
+        <div id="education">
+          <Education standalone={true} />
+        </div>
       </main>
 
       <Footer />
