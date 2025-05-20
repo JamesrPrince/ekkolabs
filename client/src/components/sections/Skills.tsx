@@ -39,7 +39,7 @@ export default function Skills() {
             <h3 className="text-xl text-[#CCD6F6] font-semibold mb-8">Technical Skills</h3>
             
             <div className="space-y-6">
-              {SKILL_CATEGORIES[0].skills.map((skill, index) => (
+              {SKILL_CATEGORIES[0]?.skills?.map((skill, index) => (
                 <div key={index}>
                   <div className="flex justify-between mb-2">
                     <span className="text-[#CCD6F6]">{skill.label}</span>
@@ -69,7 +69,7 @@ export default function Skills() {
             <h3 className="text-xl text-[#CCD6F6] font-semibold mb-8">Core Competencies</h3>
             
             <div className="grid grid-cols-2 gap-6">
-              {SKILL_CATEGORIES[1].competencies.map((competency, index) => (
+              {SKILL_CATEGORIES[1]?.competencies?.map((competency, index) => (
                 <Card key={index} className="bg-[#0A192F] p-6 rounded-lg transition-transform hover:-translate-y-2 duration-300 border-none">
                   <div className="text-[#64FFDA] text-2xl mb-3">
                     <FontAwesomeIcon icon={competency.icon as any} />
