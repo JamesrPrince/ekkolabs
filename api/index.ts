@@ -63,7 +63,9 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 export default function handler(req: VercelRequest, res: VercelResponse) {
   // Forward the request to our Express app
   return new Promise((resolve) => {
-    app(req, res, () => {
+    // TypeScript is strict about types, but Express can handle the Vercel request object
+    // We need to cast it to 'any' since the types are compatible at runtime but not at compile time
+    app(req as any, res as any, () => {
       resolve(undefined);
     });
   });
