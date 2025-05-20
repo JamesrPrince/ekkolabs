@@ -5,7 +5,11 @@ import { cn } from "@/lib/utils";
 import { SKILL_CATEGORIES } from "@/lib/constants";
 import { useEffect, useState } from "react";
 
-export default function Skills() {
+interface SkillsProps {
+  standalone?: boolean;
+}
+
+export default function Skills({ standalone = false }: SkillsProps) {
   const { elementRef, isIntersecting } = useIntersectionObserver({
     triggerOnce: true,
   });
@@ -25,16 +29,18 @@ export default function Skills() {
   return (
     <section id="skills" ref={elementRef} className="py-24 bg-[#112240]">
       <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-24">
-        <h2
-          className={cn(
-            "flex items-center text-2xl md:text-3xl font-bold text-[#CCD6F6] mb-16 animate-in",
-            isIntersecting && "show"
-          )}
-        >
-          <span className="text-[#64FFDA] font-mono mr-2">02.</span> Skills &
-          Expertise
-          <span className="ml-4 h-px bg-[#495670] flex-grow"></span>
-        </h2>
+        {!standalone && (
+          <h2
+            className={cn(
+              "flex items-center text-2xl md:text-3xl font-bold text-[#CCD6F6] mb-16 animate-in",
+              isIntersecting && "show"
+            )}
+          >
+            <span className="text-[#64FFDA] font-mono mr-2">02.</span> Skills &
+            Expertise
+            <span className="ml-4 h-px bg-[#495670] flex-grow"></span>
+          </h2>
+        )}
 
         <div className="grid md:grid-cols-2 gap-12">
           <div className={cn("animate-in", isIntersecting && "show")}>
