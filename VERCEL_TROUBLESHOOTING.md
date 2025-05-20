@@ -18,6 +18,19 @@ This document provides solutions for common issues you might encounter when depl
     // Your handler code
   }
   ```
+- Check rewrites in vercel.json to ensure API routes are correctly handled:
+  ```json
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+  ```
+- Fix type mismatches between VercelRequest and Express.Request types using type casting:
+  ```typescript
+  app(req as any, res as any, () => {
+    resolve(undefined);
+  });
+  ```
 - Check for API route errors in the Vercel Function Logs
 - Test your API endpoint directly: `https://your-site.vercel.app/api/health`
 
