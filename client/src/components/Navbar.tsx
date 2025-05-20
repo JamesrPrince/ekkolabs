@@ -48,50 +48,19 @@ export default function Navbar() {
           <ul className="flex space-x-8">
             {NAV_LINKS.map((link, index) => (
               <li key={link.href}>
-                {link.type === "page" ? (
-                  <Link href={link.href}>
-                    <span
-                      className={cn(
-                        "text-[#8892B0] hover:text-[#64FFDA] transition-colors duration-300 text-sm cursor-pointer",
-                        location === link.href && "text-[#64FFDA]"
-                      )}
-                    >
-                      <span className="text-[#64FFDA] font-mono mr-1">{`0${
-                        index + 1
-                      }.`}</span>
-                      {link.label}
-                    </span>
-                  </Link>
-                ) : link.pagePath && location !== "/" ? (
-                  <Link href={link.pagePath}>
-                    <span
-                      className={cn(
-                        "text-[#8892B0] hover:text-[#64FFDA] transition-colors duration-300 text-sm cursor-pointer",
-                        location === link.pagePath && "text-[#64FFDA]"
-                      )}
-                    >
-                      <span className="text-[#64FFDA] font-mono mr-1">{`0${
-                        index + 1
-                      }.`}</span>
-                      {link.label}
-                    </span>
-                  </Link>
-                ) : (
-                  <button
-                    onClick={() => handleNavClick(link.href)}
+                <Link href={link.href}>
+                  <span
                     className={cn(
-                      "text-[#8892B0] hover:text-[#64FFDA] transition-colors duration-300 text-sm",
-                      activeSection === link.href.substring(1) &&
-                        location === "/" &&
-                        "text-[#64FFDA]"
+                      "text-[#8892B0] hover:text-[#64FFDA] transition-colors duration-300 text-sm cursor-pointer",
+                      location === link.href && "text-[#64FFDA]"
                     )}
                   >
                     <span className="text-[#64FFDA] font-mono mr-1">{`0${
                       index + 1
                     }.`}</span>
                     {link.label}
-                  </button>
-                )}
+                  </span>
+                </Link>
               </li>
             ))}
           </ul>
@@ -134,57 +103,22 @@ export default function Navbar() {
           <ul className="space-y-4">
             {NAV_LINKS.map((link, index) => (
               <li key={link.href}>
-                {link.type === "page" ? (
-                  <Link href={link.href}>
-                    <span
-                      className={cn(
-                        "block w-full text-left py-2 pl-4 border-l-2 border-transparent cursor-pointer",
-                        location === link.href
-                          ? "text-[#64FFDA] border-l-[#64FFDA]"
-                          : "text-[#8892B0] hover:text-[#64FFDA] hover:border-l-[#64FFDA]"
-                      )}
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <span className="text-[#64FFDA] font-mono mr-2">{`0${
-                        index + 1
-                      }.`}</span>
-                      {link.label}
-                    </span>
-                  </Link>
-                ) : link.pagePath && location !== "/" ? (
-                  <Link href={link.pagePath}>
-                    <span
-                      className={cn(
-                        "block w-full text-left py-2 pl-4 border-l-2 border-transparent cursor-pointer",
-                        location === link.pagePath
-                          ? "text-[#64FFDA] border-l-[#64FFDA]"
-                          : "text-[#8892B0] hover:text-[#64FFDA] hover:border-l-[#64FFDA]"
-                      )}
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <span className="text-[#64FFDA] font-mono mr-2">{`0${
-                        index + 1
-                      }.`}</span>
-                      {link.label}
-                    </span>
-                  </Link>
-                ) : (
-                  <button
-                    onClick={() => handleNavClick(link.href)}
+                <Link href={link.href}>
+                  <span
                     className={cn(
-                      "block w-full text-left py-2 pl-4 border-l-2 border-transparent",
-                      activeSection === link.href.substring(1) &&
-                        location === "/"
+                      "block w-full text-left py-2 pl-4 border-l-2 border-transparent cursor-pointer",
+                      location === link.href
                         ? "text-[#64FFDA] border-l-[#64FFDA]"
                         : "text-[#8892B0] hover:text-[#64FFDA] hover:border-l-[#64FFDA]"
                     )}
+                    onClick={() => setIsMenuOpen(false)}
                   >
                     <span className="text-[#64FFDA] font-mono mr-2">{`0${
                       index + 1
                     }.`}</span>
                     {link.label}
-                  </button>
-                )}
+                  </span>
+                </Link>
               </li>
             ))}
             <li className="pt-4">

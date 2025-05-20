@@ -24,7 +24,9 @@ import {
   faBriefcase,
   faLaptopCode,
   faNetworkWired,
-  faDatabase
+  faDatabase,
+  faUser,
+  faNewspaper
 } from '@fortawesome/free-solid-svg-icons';
 import { 
   faLinkedinIn,
@@ -56,7 +58,9 @@ library.add(
   faBriefcase,
   faLaptopCode,
   faNetworkWired,
-  faDatabase
+  faDatabase,
+  faUser,
+  faNewspaper
 );
 
 createRoot(document.getElementById("root")!).render(<App />);
