@@ -21,6 +21,10 @@ npm run check || { echo "❌ Type checking failed. Please fix errors and try aga
 echo "🔨 Building project locally..."
 npm run build || { echo "❌ Build failed. Please fix errors and try again."; exit 1; }
 
+# Verify TypeScript compilation of API handlers
+echo "🔍 Verifying API handlers..."
+tsc --noEmit ./api/*.ts || { echo "⚠️ TypeScript issues in API handlers. This might cause problems in deployment."; }
+
 # Set up environment variables in .vercelenv
 echo "⚙️ Setting up environment variables..."
 cp .vercelenv .env
