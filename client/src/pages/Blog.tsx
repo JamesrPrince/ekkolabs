@@ -81,10 +81,8 @@ export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   // Get unique categories
-  const categories = [
-    "All",
-    ...new Set(blogPosts.map((post) => post.category)),
-  ];
+  const uniqueCategories = Array.from(new Set(blogPosts.map((post) => post.category)));
+  const categories = ["All", ...uniqueCategories];
 
   // Filter posts by category
   const filteredPosts =
@@ -120,8 +118,12 @@ export default function BlogPage() {
   }, []);
 
   // Format date to a more readable format
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
+  const formatDate = (dateString: string): string => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
     return new Date(dateString).toLocaleDateString("en-US", options);
   };
 
@@ -143,7 +145,7 @@ export default function BlogPage() {
             </p>
 
             {/* Category Filter */}
-            <div className="mb-12 flex flex-wrap gap-3" ref={elementRef}>
+            <div className="mb-12 flex flex-wrap gap-3">
               {categories.map((category) => (
                 <Button
                   key={category}
