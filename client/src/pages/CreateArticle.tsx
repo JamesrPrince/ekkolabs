@@ -76,27 +76,27 @@ export default function CreateArticlePage() {
       <SocialLinks />
       <EmailLink />
 
-      <main className="pt-20">
+      <main className="pt-20 bg-custom-primary">
         <div className="container mx-auto px-4 py-16 md:px-8 lg:px-16 xl:px-24">
           <div className="max-w-3xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-bold text-[#CCD6F6] mb-6 animate-in show">
+            <h1 className="text-4xl md:text-5xl font-bold text-custom-secondary mb-6 animate-in show">
               Create New Article
             </h1>
             <p
-              className="text-[#8892B0] text-lg mb-12 animate-in show"
+              className="text-custom-accent2 text-lg mb-12 animate-in show"
               style={{ animationDelay: "0.1s" }}
             >
               Share your knowledge and insights with the community.
             </p>
 
             <Card
-              className="bg-[#112240] border border-[#1E3A5F] p-8 animate-in show"
+              className="bg-custom-primary-lighter border border-custom-accent1 p-8 animate-in show"
               style={{ animationDelay: "0.2s" }}
             >
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Title */}
                 <div className="space-y-2">
-                  <Label htmlFor="title" className="text-[#CCD6F6]">
+                  <Label htmlFor="title" className="text-custom-secondary">
                     Article Title
                   </Label>
                   <Input
@@ -106,13 +106,13 @@ export default function CreateArticlePage() {
                     value={formData.title}
                     onChange={handleInputChange}
                     required
-                    className="bg-[#0A192F] border-[#1E3A5F] text-[#CCD6F6] focus:border-[#64FFDA]"
+                    className="bg-custom-primary border-custom-accent1 text-custom-secondary focus:border-custom-accent3"
                   />
                 </div>
 
                 {/* Excerpt */}
                 <div className="space-y-2">
-                  <Label htmlFor="excerpt" className="text-[#CCD6F6]">
+                  <Label htmlFor="excerpt" className="text-custom-secondary">
                     Short Excerpt
                   </Label>
                   <Textarea
@@ -122,13 +122,13 @@ export default function CreateArticlePage() {
                     value={formData.excerpt}
                     onChange={handleInputChange}
                     required
-                    className="bg-[#0A192F] border-[#1E3A5F] text-[#CCD6F6] focus:border-[#64FFDA] h-20"
+                    className="bg-custom-primary border-custom-accent1 text-custom-secondary focus:border-custom-accent3 h-20"
                   />
                 </div>
 
                 {/* Category */}
                 <div className="space-y-2">
-                  <Label htmlFor="category" className="text-[#CCD6F6]">
+                  <Label htmlFor="category" className="text-custom-secondary">
                     Category
                   </Label>
                   <select
@@ -137,7 +137,7 @@ export default function CreateArticlePage() {
                     value={formData.category}
                     onChange={handleInputChange}
                     required
-                    className="w-full bg-[#0A192F] border border-[#1E3A5F] text-[#CCD6F6] focus:border-[#64FFDA] rounded-md p-2"
+                    className="w-full bg-custom-primary border border-custom-accent1 text-custom-secondary focus:border-custom-accent3 rounded-md p-2"
                   >
                     <option value="">Select a category</option>
                     <option value="Web Development">Web Development</option>
@@ -153,7 +153,7 @@ export default function CreateArticlePage() {
 
                 {/* Content */}
                 <div className="space-y-2">
-                  <Label htmlFor="content" className="text-[#CCD6F6]">
+                  <Label htmlFor="content" className="text-custom-secondary">
                     Article Content
                   </Label>
                   <Textarea
@@ -163,13 +163,13 @@ export default function CreateArticlePage() {
                     value={formData.content}
                     onChange={handleInputChange}
                     required
-                    className="bg-[#0A192F] border-[#1E3A5F] text-[#CCD6F6] focus:border-[#64FFDA] min-h-[300px]"
+                    className="bg-custom-primary border-custom-accent1 text-custom-secondary focus:border-custom-accent3 min-h-[300px]"
                   />
                 </div>
 
                 {/* Feature Image */}
                 <div className="space-y-2">
-                  <Label htmlFor="image" className="text-[#CCD6F6]">
+                  <Label htmlFor="image" className="text-custom-secondary">
                     Feature Image
                   </Label>
 
@@ -184,14 +184,14 @@ export default function CreateArticlePage() {
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="absolute top-2 right-2 bg-[#0A192F]/80 text-white hover:bg-[#0A192F]"
+                        className="absolute top-2 right-2 bg-custom-primary/80 text-custom-secondary hover:bg-custom-primary"
                         onClick={clearImage}
                       >
                         <FontAwesomeIcon icon={faTimes} />
                       </Button>
                     </div>
                   ) : (
-                    <div className="border-2 border-dashed border-[#1E3A5F] rounded-md p-8 text-center hover:border-[#64FFDA] transition-colors">
+                    <div className="border-2 border-dashed border-custom-accent1 rounded-md p-8 text-center hover:border-custom-accent3 transition-colors">
                       <input
                         id="image"
                         name="image"
@@ -206,12 +206,12 @@ export default function CreateArticlePage() {
                       >
                         <FontAwesomeIcon
                           icon={faUpload}
-                          className="text-[#64FFDA] text-3xl mb-2"
+                          className="text-custom-accent3 text-3xl mb-2"
                         />
-                        <span className="text-[#8892B0]">
+                        <span className="text-custom-accent2">
                           Click to upload an image
                         </span>
-                        <span className="text-[#8892B0] text-xs mt-1">
+                        <span className="text-custom-accent2 text-xs mt-1">
                           (Max 2MB)
                         </span>
                       </Label>
@@ -224,7 +224,7 @@ export default function CreateArticlePage() {
                   <Button
                     type="button"
                     variant="outline"
-                    className="mr-4 border-[#8892B0] text-[#8892B0] hover:bg-[#1E3A5F]"
+                    className="mr-4 border-custom-accent2 text-custom-accent2 hover:bg-custom-primary-lighter"
                     onClick={() => setLocation("/blog")}
                   >
                     Cancel
@@ -232,12 +232,12 @@ export default function CreateArticlePage() {
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="bg-[#64FFDA] text-[#0A192F] hover:bg-[#64FFDA]/90 px-6"
+                    className="bg-custom-accent3 text-custom-primary hover:bg-custom-accent3/90 px-6"
                   >
                     {isSubmitting ? (
                       <span className="flex items-center">
                         <svg
-                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-[#0A192F]"
+                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-custom-primary"
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
@@ -270,10 +270,10 @@ export default function CreateArticlePage() {
             </Card>
 
             <div
-              className="mt-8 bg-[#1E3A5F] p-4 rounded-lg text-center animate-in show"
+              className="mt-8 bg-custom-accent1/30 p-4 rounded-lg text-center animate-in show"
               style={{ animationDelay: "0.3s" }}
             >
-              <p className="text-[#CCD6F6] text-sm">
+              <p className="text-custom-secondary text-sm">
                 Your article will be reviewed by our team before being
                 published.
               </p>

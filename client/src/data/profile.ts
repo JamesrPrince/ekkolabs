@@ -106,7 +106,7 @@ export const projects = [
     featured: true,
     links: {
       live: "https://example.com/retail-dashboard",
-      github: "https://github.com/prince-chisenga/retail-analytics",
+      github: "https://github.com/JamesrPrince/retail-analytics",
     },
   },
   {
@@ -120,7 +120,7 @@ export const projects = [
     featured: false,
     links: {
       live: "https://example.com/financial-forecast",
-      github: "https://github.com/prince-chisenga/financial-forecast",
+      github: "https://github.com/JamesrPrince/financial-forecast",
     },
   },
   {
@@ -148,7 +148,7 @@ export const projects = [
     featured: false,
     links: {
       live: "https://example.com/customer-segmentation",
-      github: "https://github.com/prince-chisenga/customer-segmentation",
+      github: "https://github.com/JamesrPrince/customer-segmentation",
     },
   },
   {
@@ -162,7 +162,7 @@ export const projects = [
     featured: false,
     links: {
       live: "https://example.com/market-research",
-      github: "https://github.com/prince-chisenga/market-research",
+      github: "https://github.com/JamesrPrince/market-research",
     },
   },
   {

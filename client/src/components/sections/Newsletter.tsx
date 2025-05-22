@@ -27,23 +27,23 @@ export default function Newsletter() {
     <div
       ref={elementRef}
       className={cn(
-        "bg-[#112240] rounded-lg p-8 border border-[#1E3A5F] animate-in",
+        "bg-custom-primary-lighter rounded-lg p-8 border border-custom-accent1 animate-in",
         isIntersecting && "show"
       )}
     >
       <div className="text-center mb-6">
-        <h3 className="text-xl font-bold text-[#CCD6F6] mb-2">
+        <h3 className="text-xl font-bold text-custom-secondary mb-2">
           Stay Updated on Latest Insights
         </h3>
-        <p className="text-[#8892B0] text-sm">
+        <p className="text-custom-accent2 text-sm">
           Subscribe to my newsletter for exclusive content and analytics
           insights
         </p>
       </div>
 
       {isSubscribed ? (
-        <div className="bg-[#0A192F] p-4 rounded text-center">
-          <p className="text-[#64FFDA]">
+        <div className="bg-custom-primary p-4 rounded text-center">
+          <p className="text-custom-accent3">
             Thank you for subscribing! Check your inbox soon for updates.
           </p>
         </div>
@@ -55,14 +55,14 @@ export default function Newsletter() {
           <Input
             type="email"
             placeholder="Your email address"
-            className="flex-grow bg-[#0A192F] border-[#1E3A5F] text-[#CCD6F6] focus:border-[#64FFDA] focus:ring-[#64FFDA]/10"
+            className="flex-grow bg-custom-primary border-custom-accent1 text-custom-secondary focus:border-custom-accent3 focus:ring-custom-accent3/10"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
           <Button
             type="submit"
-            className="bg-[#64FFDA] text-[#0A192F] hover:bg-[#64FFDA]/90 font-medium"
+            className="bg-custom-accent3 text-custom-primary hover:bg-custom-accent3/90 font-medium"
           >
             <FontAwesomeIcon icon={faPaperPlane} className="mr-2" />
             Subscribe

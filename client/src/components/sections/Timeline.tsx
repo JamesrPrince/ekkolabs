@@ -14,23 +14,24 @@ export default function Timeline({ standalone = false }: TimelineProps) {
   });
 
   return (
-    <section id="timeline" ref={elementRef} className="py-24 bg-[#0A192F]">
+    <section id="timeline" ref={elementRef} className="py-24 bg-custom-primary">
       <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-24">
         {!standalone && (
           <h2
             className={cn(
-              "flex items-center text-2xl md:text-3xl font-bold text-[#CCD6F6] mb-12 animate-in",
+              "flex items-center text-2xl md:text-3xl font-bold text-custom-secondary mb-12 animate-in",
               isIntersecting && "show"
             )}
           >
-            <span className="text-[#64FFDA] font-mono mr-2">03.</span> Journey
-            <span className="ml-4 h-px bg-[#495670] flex-grow"></span>
+            <span className="text-custom-accent3 font-mono mr-2">03.</span>{" "}
+            Journey
+            <span className="ml-4 h-px bg-custom-accent1 flex-grow"></span>
           </h2>
         )}
 
         <div className="relative">
           {/* Timeline center line */}
-          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-[#1E3A5F] transform md:-translate-x-1/2"></div>
+          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-custom-accent1 transform md:-translate-x-1/2"></div>
 
           {/* Timeline items */}
           <div className="relative z-10">
@@ -44,10 +45,10 @@ export default function Timeline({ standalone = false }: TimelineProps) {
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 {/* Timeline dot */}
-                <div className="absolute left-4 md:left-1/2 w-8 h-8 bg-[#112240] rounded-full border-2 border-[#64FFDA] transform -translate-x-1/2 flex items-center justify-center z-20">
+                <div className="absolute left-4 md:left-1/2 w-8 h-8 bg-custom-primary-lighter rounded-full border-2 border-custom-accent3 transform -translate-x-1/2 flex items-center justify-center z-20">
                   <FontAwesomeIcon
                     icon={item.icon as any}
-                    className="text-[#64FFDA] text-sm"
+                    className="text-custom-accent3 text-sm"
                   />
                 </div>
 
@@ -55,23 +56,23 @@ export default function Timeline({ standalone = false }: TimelineProps) {
                 <div className="relative ml-12 md:ml-0 md:w-1/2 md:px-8">
                   <div
                     className={cn(
-                      "bg-[#112240] p-6 rounded-lg border border-[#1E3A5F] shadow-lg transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl",
+                      "bg-custom-primary-lighter p-6 rounded-lg border border-custom-accent1 shadow-lg transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl",
                       isIntersecting && "show"
                     )}
                   >
                     <div className="flex flex-col h-full">
                       {/* Header */}
                       <div>
-                        <div className="mb-1 text-xs text-[#64FFDA] font-mono">
+                        <div className="mb-1 text-xs text-custom-accent3 font-mono">
                           {item.period}
                         </div>
-                        <h3 className="text-xl text-[#CCD6F6] font-bold mb-1">
+                        <h3 className="text-xl text-custom-secondary font-bold mb-1">
                           {item.title}
                         </h3>
-                        <div className="text-[#8892B0] mb-3">
+                        <div className="text-custom-accent2 mb-3">
                           {item.company} • {item.type}
                         </div>
-                        <div className="text-sm text-[#8892B0] mb-4">
+                        <div className="text-sm text-custom-accent2 mb-4">
                           {item.location}
                         </div>
                       </div>
@@ -82,9 +83,11 @@ export default function Timeline({ standalone = false }: TimelineProps) {
                           {item.responsibilities.map((resp, i) => (
                             <li
                               key={i}
-                              className="text-sm text-[#8892B0] flex items-start"
+                              className="text-sm text-custom-accent2 flex items-start"
                             >
-                              <span className="text-[#64FFDA] mr-2 mt-1">▹</span>
+                              <span className="text-custom-accent3 mr-2 mt-1">
+                                ▹
+                              </span>
                               <span>{resp}</span>
                             </li>
                           ))}
@@ -96,7 +99,7 @@ export default function Timeline({ standalone = false }: TimelineProps) {
                         {item.skills.map((skill, i) => (
                           <span
                             key={i}
-                            className="text-xs bg-[#1E3A5F] text-[#64FFDA] px-2 py-1 rounded"
+                            className="text-xs bg-custom-primary text-custom-accent3 px-2 py-1 rounded"
                           >
                             {skill}
                           </span>

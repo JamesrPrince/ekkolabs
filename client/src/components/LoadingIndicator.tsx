@@ -24,14 +24,16 @@ const LoadingIndicator = ({ isLoading }: LoadingIndicatorProps) => {
 
   return (
     <div
-      className={`fixed inset-0 bg-[#0A192F] z-50 flex items-center justify-center transition-opacity duration-500 ${
+      className={`fixed inset-0 bg-custom-primary z-50 flex items-center justify-center transition-opacity duration-500 ${
         isLoading ? "opacity-100" : "opacity-0"
       }`}
     >
       <div className="flex flex-col items-center">
-        <div className="w-12 h-12 border-4 border-t-[#64FFDA] border-[#112240] rounded-full animate-spin mb-4"></div>
-        <h2 className="text-[#64FFDA] text-xl font-mono mb-2">Loading</h2>
-        <p className="text-[#8892B0]">Please wait while the page loads...</p>
+        <div className="w-12 h-12 border-4 border-t-custom-accent3 border-custom-primary-lighter rounded-full animate-spin mb-4"></div>
+        <h2 className="text-custom-accent3 text-xl font-mono mb-2">Loading</h2>
+        <p className="text-custom-accent2">
+          Please wait while the page loads...
+        </p>
       </div>
     </div>
   );

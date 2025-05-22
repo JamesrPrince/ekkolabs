@@ -73,15 +73,15 @@ export default function AboutPage() {
       <EmailLink />
 
       <main>
-        <div className="pt-20">
+        <div className="pt-20 bg-custom-primary">
           <div className="container mx-auto px-4 py-16 md:px-8 lg:px-16 xl:px-24">
             <div className="md:flex items-end justify-between mb-12">
               <div>
-                <h1 className="text-4xl md:text-5xl font-bold text-[#CCD6F6] mb-4 animate-in show">
+                <h1 className="text-4xl md:text-5xl font-bold text-custom-secondary mb-4 animate-in show">
                   About Me
                 </h1>
                 <p
-                  className="text-[#8892B0] text-lg mb-6 max-w-2xl animate-in show"
+                  className="text-custom-accent2 text-lg mb-6 max-w-2xl animate-in show"
                   style={{ animationDelay: "0.1s" }}
                 >
                   Learn more about my background, skills, and the journey that
@@ -91,7 +91,7 @@ export default function AboutPage() {
 
               <Button
                 variant="outline"
-                className="border border-[#64FFDA] text-[#64FFDA] hover:bg-[#64FFDA]/10 px-8 py-2 animate-in show"
+                className="border border-custom-accent3 text-custom-accent3 hover:bg-custom-accent3/10 px-8 py-2 animate-in show"
                 style={{ animationDelay: "0.2s" }}
                 onClick={() => window.open(RESUME_URL, "_blank")}
               >
@@ -102,7 +102,7 @@ export default function AboutPage() {
 
             {/* Tab navigation for larger screens */}
             <div
-              className="hidden md:flex space-x-6 border-b border-[#1E3A5F] mb-12 animate-in show"
+              className="hidden md:flex space-x-6 border-b border-custom-accent1 mb-12 animate-in show"
               style={{ animationDelay: "0.3s" }}
             >
               {tabs.map((tab) => (
@@ -111,46 +111,48 @@ export default function AboutPage() {
                   className={cn(
                     "pb-4 px-2 relative font-medium transition-colors",
                     activeTab === tab.id
-                      ? "text-[#64FFDA]"
-                      : "text-[#8892B0] hover:text-[#CCD6F6]"
+                      ? "text-custom-accent3"
+                      : "text-custom-accent2 hover:text-custom-secondary"
                   )}
                   onClick={() => navigateToSection(tab.id)}
                 >
                   {tab.label}
                   {activeTab === tab.id && (
-                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#64FFDA]"></span>
+                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-custom-accent3"></span>
                   )}
                 </button>
               ))}
             </div>
 
             {/* Mobile accordion intro */}
-            <div className="md:hidden mb-8 bg-[#112240] p-4 rounded-lg animate-in show">
+            <div className="md:hidden mb-8 bg-custom-primary-lighter p-4 rounded-lg animate-in show">
               <div
                 className="flex justify-between items-center"
                 onClick={() => setExpanded(!expanded)}
               >
-                <h3 className="text-lg font-bold text-[#CCD6F6]">
+                <h3 className="text-lg font-bold text-custom-secondary">
                   Quick Profile
                 </h3>
                 <FontAwesomeIcon
                   icon={expanded ? faChevronUp : faChevronDown}
-                  className="text-[#64FFDA]"
+                  className="text-custom-accent3"
                 />
               </div>
 
               {expanded && (
-                <div className="mt-4 text-[#8892B0]">
+                <div className="mt-4 text-custom-accent2">
                   <p className="mb-4">{profile.intro}</p>
                   <div className="flex justify-between">
                     <div>
-                      <p className="text-xs text-[#CCD6F6] mb-1">Based in</p>
+                      <p className="text-xs text-custom-secondary mb-1">
+                        Based in
+                      </p>
                       <p className="text-sm">{profile.title}</p>
                     </div>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="text-[#64FFDA] hover:bg-[#64FFDA]/10 text-xs"
+                      className="text-custom-accent3 hover:bg-custom-accent3/10 text-xs"
                       onClick={() => window.open(RESUME_URL, "_blank")}
                     >
                       <FontAwesomeIcon icon={faDownload} className="mr-1" />

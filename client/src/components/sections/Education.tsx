@@ -79,18 +79,22 @@ export default function Education({ standalone = false }: EducationProps) {
   });
 
   return (
-    <section id="education" ref={elementRef} className="py-24 bg-[#112240]">
+    <section
+      id="education"
+      ref={elementRef}
+      className="py-24 bg-custom-primary-lighter"
+    >
       <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-24">
         {!standalone && (
           <h2
             className={cn(
-              "flex items-center text-2xl md:text-3xl font-bold text-[#CCD6F6] mb-12 animate-in",
+              "flex items-center text-2xl md:text-3xl font-bold text-custom-secondary mb-12 animate-in",
               isIntersecting && "show"
             )}
           >
-            <span className="text-[#64FFDA] font-mono mr-2">04.</span> Education
-            & Certifications
-            <span className="ml-4 h-px bg-[#495670] flex-grow"></span>
+            <span className="text-custom-accent3 font-mono mr-2">04.</span>{" "}
+            Education & Certifications
+            <span className="ml-4 h-px bg-custom-accent1 flex-grow"></span>
           </h2>
         )}
 
@@ -101,10 +105,10 @@ export default function Education({ standalone = false }: EducationProps) {
           >
             {/* Education Section */}
             <div>
-              <h3 className="text-xl text-[#CCD6F6] font-semibold mb-6 flex items-center">
+              <h3 className="text-xl text-custom-secondary font-semibold mb-6 flex items-center">
                 <FontAwesomeIcon
                   icon={faGraduationCap}
-                  className="text-[#64FFDA] mr-3"
+                  className="text-custom-accent3 mr-3"
                 />
                 Academic Background
               </h3>
@@ -113,18 +117,20 @@ export default function Education({ standalone = false }: EducationProps) {
                 {educationData.map((edu, index) => (
                   <div
                     key={index}
-                    className="bg-[#0A192F] p-6 rounded-lg border border-[#1E3A5F] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                    className="bg-custom-primary p-6 rounded-lg border border-custom-accent1 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                   >
-                    <div className="text-sm text-[#64FFDA] mb-2 font-mono">
+                    <div className="text-sm text-custom-accent3 mb-2 font-mono">
                       {edu.period}
                     </div>
-                    <h4 className="text-[#CCD6F6] font-bold mb-1">
+                    <h4 className="text-custom-secondary font-bold mb-1">
                       {edu.degree}
                     </h4>
-                    <div className="text-sm text-[#8892B0] mb-3">
+                    <div className="text-sm text-custom-accent2 mb-3">
                       {edu.institution}
                     </div>
-                    <p className="text-sm text-[#8892B0]">{edu.description}</p>
+                    <p className="text-sm text-custom-accent2">
+                      {edu.description}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -132,10 +138,10 @@ export default function Education({ standalone = false }: EducationProps) {
 
             {/* Awards Section */}
             <div>
-              <h3 className="text-xl text-[#CCD6F6] font-semibold mb-6 flex items-center">
+              <h3 className="text-xl text-custom-secondary font-semibold mb-6 flex items-center">
                 <FontAwesomeIcon
                   icon={faAward}
-                  className="text-[#64FFDA] mr-3"
+                  className="text-custom-accent3 mr-3"
                 />
                 Awards & Recognition
               </h3>
@@ -144,14 +150,16 @@ export default function Education({ standalone = false }: EducationProps) {
                 {awards.map((award, index) => (
                   <div
                     key={index}
-                    className="bg-[#0A192F] p-4 rounded-lg border border-[#1E3A5F] flex items-center transition-all duration-300 hover:-translate-x-1 hover:border-[#64FFDA]"
+                    className="bg-custom-primary p-4 rounded-lg border border-custom-accent1 flex items-center transition-all duration-300 hover:-translate-x-1 hover:border-custom-accent3"
                   >
-                    <div className="w-12 h-12 bg-[#112240] rounded-full flex items-center justify-center mr-4 text-[#64FFDA]">
+                    <div className="w-12 h-12 bg-custom-primary-lighter rounded-full flex items-center justify-center mr-4 text-custom-accent3">
                       <FontAwesomeIcon icon={award.icon} />
                     </div>
                     <div>
-                      <h4 className="text-[#CCD6F6] font-bold">{award.name}</h4>
-                      <div className="text-xs text-[#8892B0]">
+                      <h4 className="text-custom-secondary font-bold">
+                        {award.name}
+                      </h4>
+                      <div className="text-xs text-custom-accent2">
                         {award.issuer} • {award.year}
                       </div>
                     </div>
@@ -166,10 +174,10 @@ export default function Education({ standalone = false }: EducationProps) {
             className={cn("animate-in", isIntersecting && "show")}
             style={{ animationDelay: "0.2s" }}
           >
-            <h3 className="text-xl text-[#CCD6F6] font-semibold mb-6 flex items-center">
+            <h3 className="text-xl text-custom-secondary font-semibold mb-6 flex items-center">
               <FontAwesomeIcon
                 icon={faCertificate}
-                className="text-[#64FFDA] mr-3"
+                className="text-custom-accent3 mr-3"
               />
               Professional Certifications
             </h3>
@@ -178,19 +186,19 @@ export default function Education({ standalone = false }: EducationProps) {
               {certifications.map((cert, index) => (
                 <div
                   key={index}
-                  className="bg-[#0A192F] p-6 rounded-lg border border-[#1E3A5F] transition-all duration-300 hover:scale-105 hover:shadow-lg flex"
+                  className="bg-custom-primary p-6 rounded-lg border border-custom-accent1 transition-all duration-300 hover:scale-105 hover:shadow-lg flex"
                 >
-                  <div className="w-16 h-16 bg-[#112240] rounded-lg flex items-center justify-center mr-4 text-[#64FFDA] text-2xl flex-shrink-0">
+                  <div className="w-16 h-16 bg-custom-primary-lighter rounded-lg flex items-center justify-center mr-4 text-custom-accent3 text-2xl flex-shrink-0">
                     <FontAwesomeIcon icon={cert.icon} />
                   </div>
                   <div>
-                    <h4 className="text-[#CCD6F6] font-bold mb-1">
+                    <h4 className="text-custom-secondary font-bold mb-1">
                       {cert.name}
                     </h4>
-                    <div className="text-sm text-[#8892B0] mb-1">
+                    <div className="text-sm text-custom-accent2 mb-1">
                       Issued by {cert.issuer}
                     </div>
-                    <div className="text-xs text-[#64FFDA] font-mono">
+                    <div className="text-xs text-custom-accent3 font-mono">
                       Obtained in {cert.date}
                     </div>
                   </div>
@@ -198,8 +206,8 @@ export default function Education({ standalone = false }: EducationProps) {
               ))}
             </div>
 
-            <div className="mt-8 bg-[#1E3A5F] p-4 rounded-lg">
-              <p className="text-[#CCD6F6] text-sm italic text-center">
+            <div className="mt-8 bg-custom-accent1/30 p-4 rounded-lg">
+              <p className="text-custom-secondary text-sm italic text-center">
                 "Continuous learning and professional development are core to
                 staying relevant in the rapidly evolving data landscape."
               </p>

@@ -1,4 +1,4 @@
-# Prince Chisenga Portfolio
+# Ekko Labs
 
 A modern, responsive portfolio website showcasing the professional experience, skills, and projects of Prince Chisenga, a Data Analyst & Business Consultant based in Lusaka, Zambia.
 

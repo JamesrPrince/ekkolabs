@@ -31,7 +31,7 @@ const blogPosts = [
       "A step-by-step guide to creating a modern portfolio website using React, Tailwind CSS, and deploying it to Vercel.",
     date: "2025-05-15",
     category: "Web Development",
-    image: "https://placehold.co/600x400/112240/64FFDA?text=Portfolio+Website",
+    image: "https://placehold.co/600x400/0a0908/c84630?text=Portfolio+Website",
     readTime: "5 min read",
     featured: true,
   },
@@ -42,7 +42,7 @@ const blogPosts = [
       "Learn how serverless functions can simplify your backend architecture and reduce operational overhead for small to medium-sized projects.",
     date: "2025-05-10",
     category: "Backend",
-    image: "https://placehold.co/600x400/112240/64FFDA?text=Serverless",
+    image: "https://placehold.co/600x400/0a0908/c84630?text=Serverless",
     readTime: "8 min read",
     featured: false,
   },
@@ -53,7 +53,7 @@ const blogPosts = [
       "Discover how to build beautiful, responsive animations that enhance user experience using Framer Motion and React.",
     date: "2025-05-05",
     category: "Animation",
-    image: "https://placehold.co/600x400/112240/64FFDA?text=Animations",
+    image: "https://placehold.co/600x400/0a0908/c84630?text=Animations",
     readTime: "6 min read",
     featured: false,
   },
@@ -64,7 +64,7 @@ const blogPosts = [
       "Tips and tricks for measuring and improving the performance of your React applications.",
     date: "2025-04-28",
     category: "Performance",
-    image: "https://placehold.co/600x400/112240/64FFDA?text=React+Performance",
+    image: "https://placehold.co/600x400/0a0908/c84630?text=React+Performance",
     readTime: "7 min read",
     featured: false,
   },
@@ -75,7 +75,7 @@ const blogPosts = [
       "How to leverage TypeScript to create more maintainable and error-free React applications.",
     date: "2025-04-20",
     category: "TypeScript",
-    image: "https://placehold.co/600x400/112240/64FFDA?text=TypeScript",
+    image: "https://placehold.co/600x400/0a0908/c84630?text=TypeScript",
     readTime: "9 min read",
     featured: false,
   },
@@ -86,7 +86,7 @@ const blogPosts = [
       "Understanding the JAMstack architecture and how it changes the way we build websites.",
     date: "2025-04-15",
     category: "Architecture",
-    image: "https://placehold.co/600x400/112240/64FFDA?text=JAMstack",
+    image: "https://placehold.co/600x400/0a0908/c84630?text=JAMstack",
     readTime: "5 min read",
     featured: false,
   },
@@ -200,22 +200,22 @@ export default function BlogPage() {
       <SocialLinks />
       <EmailLink />
 
-      <main className="pt-20">
+      <main className="pt-20 bg-custom-primary">
         <div className="container mx-auto px-4 py-16 md:px-8 lg:px-16 xl:px-24">
           {/* Header Section */}
           <div
             className="text-center mb-16 animate-in show"
             style={{ animationDelay: "0.1s" }}
           >
-            <h1 className="text-5xl md:text-6xl font-bold text-[#CCD6F6] mb-4">
+            <h1 className="text-5xl md:text-6xl font-bold text-custom-secondary mb-4">
               Ekko's Blog
             </h1>
-            <p className="text-lg md:text-xl text-[#8892B0] max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-custom-accent2 max-w-2xl mx-auto">
               Thoughts on web development, tech, and life.
             </p>
             <Button
               variant="outline"
-              className="mt-6 bg-transparent border-[#64FFDA] text-[#64FFDA] hover:bg-[#64FFDA] hover:text-[#0A192F] transition-colors animate-in show"
+              className="mt-6 bg-transparent border-custom-accent3 text-custom-accent3 hover:bg-custom-accent3 hover:text-custom-primary transition-colors animate-in show"
               style={{ animationDelay: "0.2s" }}
               onClick={() => setLocation("/create-article")} // Updated navigation
             >
@@ -238,11 +238,11 @@ export default function BlogPage() {
               <Input
                 type="text"
                 placeholder="Search articles..."
-                className="bg-[#112240] border-[#1E3A5F] text-[#CCD6F6] focus:border-[#64FFDA] pr-10"
+                className="bg-custom-primary-lighter border-custom-accent1 text-custom-secondary focus:border-custom-accent3 pr-10"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#8892B0]">
+              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-custom-accent2">
                 <FontAwesomeIcon
                   icon={searchQuery ? faTimes : faSearch}
                   onClick={() => searchQuery && setSearchQuery("")}
@@ -261,8 +261,8 @@ export default function BlogPage() {
                     className={cn(
                       "px-4 py-2 rounded",
                       selectedCategory === category
-                        ? "text-[#64FFDA] bg-[#112240] hover:bg-[#1E3A5F]"
-                        : "text-[#8892B0] hover:text-[#CCD6F6] hover:bg-[#112240]"
+                        ? "text-custom-accent3 bg-custom-primary-lighter hover:bg-custom-accent3/10"
+                        : "text-custom-accent2 hover:text-custom-secondary hover:bg-custom-primary-lighter"
                     )}
                     onClick={() => setSelectedCategory(category)}
                   >
@@ -281,8 +281,8 @@ export default function BlogPage() {
                     className={cn(
                       "text-xs px-3 py-1 border",
                       activeTags.includes(tag)
-                        ? "bg-[#64FFDA]/10 text-[#64FFDA] border-[#64FFDA]"
-                        : "text-[#8892B0] border-[#1E3A5F] hover:text-[#64FFDA] hover:border-[#64FFDA]"
+                        ? "bg-custom-accent3/10 text-custom-accent3 border-custom-accent3"
+                        : "text-custom-accent2 border-custom-accent1 hover:text-custom-accent3 hover:border-custom-accent3"
                     )}
                     onClick={() => toggleTag(tag)}
                   >
@@ -303,7 +303,7 @@ export default function BlogPage() {
                     <Card
                       key={post.id}
                       className={cn(
-                        "overflow-hidden bg-[#0A192F] border-none transition-all duration-300 hover:-translate-y-2 animate-in",
+                        "overflow-hidden bg-custom-primary-lighter border-none transition-all duration-300 hover:-translate-y-2 animate-in",
                         isIntersecting && "show"
                       )}
                       style={{ animationDelay: `${index * 0.1}s` }}
@@ -317,34 +317,34 @@ export default function BlogPage() {
                       </div>
                       <div className="p-6">
                         <div className="flex justify-between items-center mb-3">
-                          <div className="flex items-center text-[#64FFDA] text-xs">
+                          <div className="flex items-center text-custom-accent3 text-xs">
                             <FontAwesomeIcon
                               icon={faCalendarAlt}
                               className="mr-2"
                             />
                             {formatDate(post.date)}
                           </div>
-                          <span className="text-[#8892B0] text-xs flex items-center">
+                          <span className="text-custom-accent2 text-xs flex items-center">
                             <FontAwesomeIcon icon={faClock} className="mr-2" />
                             {post.readTime}
                           </span>
                         </div>
 
-                        <h3 className="text-[#CCD6F6] text-xl font-bold mb-3 line-clamp-2 hover:text-[#64FFDA] transition-colors">
+                        <h3 className="text-custom-secondary text-xl font-bold mb-3 line-clamp-2 hover:text-custom-accent3 transition-colors">
                           {post.title}
                         </h3>
-                        <p className="text-[#8892B0] mb-4 text-sm line-clamp-3">
+                        <p className="text-custom-accent2 mb-4 text-sm line-clamp-3">
                           {post.excerpt}
                         </p>
 
                         <div className="flex justify-between items-center">
-                          <div className="flex items-center text-[#64FFDA] text-xs">
+                          <div className="flex items-center text-custom-accent3 text-xs">
                             <FontAwesomeIcon icon={faTag} className="mr-2" />
                             {post.category}
                           </div>
                           <Button
                             variant="link"
-                            className="text-[#64FFDA] p-0 hover:text-[#CCD6F6]"
+                            className="text-custom-accent3 p-0 hover:text-custom-secondary"
                           >
                             Read More
                           </Button>
@@ -354,13 +354,13 @@ export default function BlogPage() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-16 bg-[#112240] rounded-lg border border-[#1E3A5F]">
-                  <p className="text-[#8892B0] mb-4">
+                <div className="text-center py-16 bg-custom-primary-lighter rounded-lg border border-custom-accent1">
+                  <p className="text-custom-accent2 mb-4">
                     No articles found matching your criteria.
                   </p>
                   <Button
                     variant="outline"
-                    className="border border-[#64FFDA] text-[#64FFDA] hover:bg-[#64FFDA]/10"
+                    className="border border-custom-accent3 text-custom-accent3 hover:bg-custom-accent3/10"
                     onClick={clearFilters}
                   >
                     Clear Filters
@@ -376,10 +376,10 @@ export default function BlogPage() {
 
               {/* Popular tags */}
               <div
-                className="bg-[#112240] rounded-lg p-6 border border-[#1E3A5F] animate-in"
+                className="bg-custom-primary-lighter rounded-lg p-6 border border-custom-accent1 animate-in"
                 style={{ animationDelay: "0.3s" }}
               >
-                <h3 className="text-lg font-bold text-[#CCD6F6] mb-4">
+                <h3 className="text-lg font-bold text-custom-secondary mb-4">
                   Popular Topics
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -391,8 +391,8 @@ export default function BlogPage() {
                       className={cn(
                         "text-xs px-3 py-1 border",
                         activeTags.includes(tag)
-                          ? "bg-[#64FFDA]/10 text-[#64FFDA] border-[#64FFDA]"
-                          : "text-[#8892B0] border-[#1E3A5F] hover:text-[#64FFDA] hover:border-[#64FFDA]"
+                          ? "bg-custom-accent3/10 text-custom-accent3 border-custom-accent3"
+                          : "text-custom-accent2 border-custom-accent1 hover:text-custom-accent3 hover:border-custom-accent3"
                       )}
                       onClick={() => toggleTag(tag)}
                     >
@@ -404,10 +404,10 @@ export default function BlogPage() {
 
               {/* Recent posts - simplified version */}
               <div
-                className="bg-[#112240] rounded-lg p-6 border border-[#1E3A5F] animate-in"
+                className="bg-custom-primary-lighter rounded-lg p-6 border border-custom-accent1 animate-in"
                 style={{ animationDelay: "0.4s" }}
               >
-                <h3 className="text-lg font-bold text-[#CCD6F6] mb-4">
+                <h3 className="text-lg font-bold text-custom-secondary mb-4">
                   Recent Posts
                 </h3>
                 <div className="space-y-4">
@@ -421,10 +421,10 @@ export default function BlogPage() {
                         />
                       </div>
                       <div>
-                        <h4 className="text-[#CCD6F6] font-medium text-sm line-clamp-2 hover:text-[#64FFDA] transition-colors cursor-pointer">
+                        <h4 className="text-custom-secondary font-medium text-sm line-clamp-2 hover:text-custom-accent3 transition-colors cursor-pointer">
                           {post.title}
                         </h4>
-                        <div className="text-[#8892B0] text-xs mt-1">
+                        <div className="text-custom-accent2 text-xs mt-1">
                           {formatDate(post.date)}
                         </div>
                       </div>

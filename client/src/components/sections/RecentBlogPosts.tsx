@@ -1,82 +1,88 @@
-import { useLocation, Link } from "wouter";
-import { cn } from "@/lib/utils";
+// filepath: /Users/ekko/Developer/ekkolabs/client/src/components/sections/RecentBlogPosts.tsx
+import { Link } from "wouter";
 import useIntersectionObserver from "@/hooks/use-intersection-observer";
+import { cn } from "@/lib/utils";
 
-// Sample data - in a real app, this would come from an API or CMS
-const posts = [
+// Placeholder data - replace with actual blog post data or fetch from an API
+const recentPosts = [
   {
-    id: 1,
-    title: "Building a Portfolio with React & Tailwind",
+    id: "1",
+    title: "The Evolving Landscape of Predictive Analytics in 2025",
     date: "May 15, 2025",
-    excerpt: "A step-by-step guide to creating a modern portfolio website...",
-    slug: "/blog/building-portfolio-react-tailwind", // Example slug
-  },
-  {
-    id: 2,
-    title: "The Power of Serverless Functions",
-    date: "May 10, 2025",
     excerpt:
-      "Learn how serverless functions can simplify your backend architecture...",
-    slug: "/blog/power-serverless-functions",
+      "A look into the latest advancements in predictive modeling and how businesses are leveraging them for a competitive edge.",
+    image:
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400", // Placeholder image
+    slug: "/blog/predictive-analytics-2025", // Example slug
   },
   {
-    id: 3,
-    title: "Animations with Framer Motion in React",
-    date: "May 5, 2025",
-    excerpt: "Discover how to build beautiful, responsive animations...",
-    slug: "/blog/animations-framer-motion-react",
+    id: "2",
+    title: "Data-Driven Decision Making: A Practical Guide for SMEs",
+    date: "April 28, 2025",
+    excerpt:
+      "Small and medium enterprises can unlock significant growth by adopting a data-first approach. This guide shows you how.",
+    image:
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400", // Placeholder image
+    slug: "/blog/data-driven-smes",
+  },
+  {
+    id: "3",
+    title: "Ethical Considerations in AI and Machine Learning Projects",
+    date: "March 10, 2025",
+    excerpt:
+      "Navigating the complex ethical terrain of AI/ML is crucial. We explore key considerations for responsible AI development.",
+    image:
+      "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400", // Placeholder image
+    slug: "/blog/ethical-ai-ml",
   },
 ];
 
 export default function RecentBlogPosts() {
-  const [, setLocation] = useLocation();
   const { elementRef, isIntersecting } = useIntersectionObserver({
     triggerOnce: true,
-    threshold: 0.1,
   });
-
-  const navigateToBlog = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    setLocation("/blog");
-  };
 
   return (
     <section
       id="recent-blog"
       ref={elementRef}
-      className="py-16 md:py-24 bg-[#0A192F]"
+      className="py-24 bg-custom-primary"
     >
       <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-24">
         <h2
           className={cn(
-            "text-3xl md:text-4xl font-bold text-[var(--color-lightest-slate)] mb-12 text-center animate-in",
+            "flex items-center text-2xl md:text-3xl font-bold text-custom-secondary mb-16 animate-in",
             isIntersecting && "show"
           )}
-          style={{ animationDelay: "0.1s" }}
         >
-          From the Blog
+          From my blog post
+          <span className="ml-4 h-px bg-custom-accent1 flex-grow"></span>
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {posts.map((post, index) => (
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {recentPosts.map((post, index) => (
             <Link key={post.id} href={post.slug}>
               <a
                 className={cn(
-                  "project-card p-6 block animate-in", // Reusing project-card style for consistency
+                  "block bg-custom-primary-lighter p-6 rounded-lg shadow-lg hover:shadow-custom-accent3/20 transition-shadow duration-300 animate-in",
                   isIntersecting && "show"
                 )}
-                style={{ animationDelay: `${0.2 + index * 0.1}s` }}
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <h3 className="text-xl font-semibold text-[var(--color-lightest-slate)] mb-2 group-hover:text-[var(--color-teal)] transition-colors duration-300">
+                {post.image && (
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="w-full h-48 object-cover rounded-md mb-6"
+                  />
+                )}
+                <h3 className="text-xl text-custom-secondary font-semibold mb-2 hover:text-custom-accent3 transition-colors duration-300">
                   {post.title}
                 </h3>
-                <p className="text-sm text-[var(--color-slate)] mb-3">
-                  {post.date}
-                </p>
-                <p className="text-[var(--color-slate)] mb-4 text-sm leading-relaxed h-20 overflow-hidden">
-                  {post.excerpt}
-                </p>
-                <span className="text-[var(--color-teal)] hover:underline text-sm font-mono">
-                  Read More &rarr;
+                <p className="text-custom-accent1 text-sm mb-3">{post.date}</p>
+                <p className="text-custom-accent2 mb-4">{post.excerpt}</p>
+                <span className="text-custom-accent3 font-semibold hover:underline">
+                  Read More »
                 </span>
               </a>
             </Link>
@@ -87,15 +93,13 @@ export default function RecentBlogPosts() {
             "text-center mt-12 animate-in",
             isIntersecting && "show"
           )}
-          style={{ animationDelay: `${0.2 + posts.length * 0.1}s` }}
+          style={{ animationDelay: "0.3s" }}
         >
-          <a
-            href="/blog"
-            onClick={navigateToBlog}
-            className="btn-outline" // Using the new btn-outline class
-          >
-            View All Posts
-          </a>
+          <Link href="/blog">
+            <a className="inline-block border border-custom-accent3 text-custom-accent3 px-8 py-3 rounded font-mono hover:bg-custom-accent3/10 transition-colors duration-300">
+              View All Posts
+            </a>
+          </Link>
         </div>
       </div>
     </section>

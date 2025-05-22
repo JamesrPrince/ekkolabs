@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background: 220 69% 97%;
-  --foreground: 222 47% 11%;
+  --background: 220 69% 97%; /* Light mode background - will be overridden by dark mode */
+  --foreground: 222 47% 11%; /* Light mode text - will be overridden by dark mode */
   --muted: 210 40% 96.1%;
   --muted-foreground: 215.4 16.3% 46.9%;
   --popover: 0 0% 100%;
@@ -13,49 +13,59 @@
   --card-foreground: 222 47% 11%;
   --border: 214.3 31.8% 91.4%;
   --input: 214.3 31.8% 91.4%;
-  --primary: 196 90% 54%;
+  --primary: 196 90% 54%; /* Default primary - will be overridden */
   --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96.1%;
+  --secondary: 210 40% 96.1%; /* Default secondary - will be overridden */
   --secondary-foreground: 222.2 47.4% 11.2%;
-  --accent: 210 40% 96.1%;
+  --accent: 210 40% 96.1%; /* Default accent - will be overridden */
   --accent-foreground: 222.2 47.4% 11.2%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 210 40% 98%;
   --ring: 215 20.2% 65.1%;
   --radius: 0.5rem;
 
-  /* Theme specific colors */
-  --navy: 222 47% 11%;
-  --navy-light: 218 47% 16%;
-  --navy-dark: 220 60% 6%;
-  --slate: 218 14% 63%;
-  --slate-light: 221 83% 86%;
-  --slate-dark: 220 24% 37%;
-  --teal: 168 100% 70%;
-  --teal-light: 176 100% 83%;
-  --teal-dark: 174 100% 75%;
+  /* Custom color scheme variables */
+  --custom-primary: 20 20% 4%; /* #0a0908 */
+  --custom-secondary: 0 0% 77%; /* #c5c5c5 */
+  --custom-accent1: 180 6% 54%; /* #829191 */
+  --custom-accent2: 160 3% 59%; /* #949b96 */
+  --custom-accent3: 10 60% 51%; /* #c84630 */
 }
 
 .dark {
-  --background: 221 39% 11%;
-  --foreground: 210 40% 98%;
-  --muted: 217 33% 18%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --popover: 222 47% 11%;
-  --popover-foreground: 210 40% 98%;
-  --card: 222 47% 11%;
-  --card-foreground: 210 40% 98%;
-  --border: 217 33% 18%;
-  --input: 217 33% 18%;
-  --primary: 168 100% 70%;
-  --primary-foreground: 222 47% 11%;
-  --secondary: 217 33% 18%;
-  --secondary-foreground: 210 40% 98%;
-  --accent: 217 33% 18%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 98%;
-  --ring: 212.7 26.8% 83.9%;
+  /* Overriding default dark theme with custom sleek, vibrant, and energetic theme */
+  --background: var(--custom-primary); /* #0a0908 */
+  --foreground: var(--custom-secondary); /* #c5c5c5 */
+
+  --muted: var(--custom-accent1); /* #829191 - for less prominent elements */
+  --muted-foreground: var(--custom-primary); /* Text on muted backgrounds */
+
+  --popover: var(--custom-primary); /* Popover background */
+  --popover-foreground: var(--custom-secondary); /* Popover text */
+
+  --card: hsl(
+    20,
+    20%,
+    7%
+  ); /* Slightly lighter than primary for cards: #141211 */
+  --card-foreground: var(--custom-secondary);
+
+  --border: var(--custom-accent2); /* #949b96 - for borders */
+  --input: hsl(20, 20%, 10%); /* Darker input background #1a1817 */
+
+  --primary: var(--custom-accent3); /* #c84630 - for primary actions, buttons */
+  --primary-foreground: var(--custom-primary); /* Text on primary buttons */
+
+  --secondary: var(--custom-accent1); /* #829191 - for secondary actions */
+  --secondary-foreground: var(--custom-primary); /* Text on secondary buttons */
+
+  --accent: var(--custom-accent3); /* #c84630 - for highlights, active states */
+  --accent-foreground: var(--custom-primary); /* Text on accent elements */
+
+  --destructive: 0 70% 45%; /* A slightly adjusted destructive color */
+  --destructive-foreground: var(--custom-secondary);
+
+  --ring: var(--custom-accent3); /* Focus rings, etc. */
 }
 
 @layer base {
@@ -68,7 +78,8 @@
   }
 
   body {
-    @apply bg-[#0A192F] text-[#8892B0] font-sans;
+    /* Apply the new background and foreground colors */
+    @apply bg-background text-foreground font-sans;
   }
 
   .font-mono {

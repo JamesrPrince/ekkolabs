@@ -1,50 +1,59 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { SOCIAL_LINKS } from '@/lib/constants';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { SOCIAL_LINKS } from "@/lib/constants";
+import { profile } from "@/data/profile";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="py-6 bg-[#0A192F]">
+    <footer className="py-6 bg-custom-primary border-t border-border">
+      {" "}
+      {/* Use new theme colors */}
       <div className="container mx-auto px-4 text-center">
         <div className="flex justify-center space-x-6 mb-4 md:hidden">
-          <a 
-            href={SOCIAL_LINKS.linkedin} 
-            target="_blank" 
+          <a
+            href={SOCIAL_LINKS.linkedin}
+            target="_blank"
             rel="noopener noreferrer"
-            className="text-[#8892B0] hover:text-[#64FFDA] transition-colors duration-300"
+            className="text-custom-secondary hover:text-custom-accent3 transition-colors duration-300" // Use new theme colors
             aria-label="LinkedIn"
           >
-            <FontAwesomeIcon icon={['fab', 'linkedin-in']} />
+            <FontAwesomeIcon icon={["fab", "linkedin-in"]} />
           </a>
-          <a 
-            href={SOCIAL_LINKS.github} 
-            target="_blank" 
+          <a
+            href={SOCIAL_LINKS.github}
+            target="_blank"
             rel="noopener noreferrer"
-            className="text-[#8892B0] hover:text-[#64FFDA] transition-colors duration-300"
+            className="text-custom-secondary hover:text-custom-accent3 transition-colors duration-300" // Use new theme colors
             aria-label="GitHub"
           >
-            <FontAwesomeIcon icon={['fab', 'github']} />
+            <FontAwesomeIcon icon={["fab", "github"]} />
           </a>
-          <a 
-            href={SOCIAL_LINKS.twitter} 
-            target="_blank" 
+          <a
+            href={SOCIAL_LINKS.twitter}
+            target="_blank"
             rel="noopener noreferrer"
-            className="text-[#8892B0] hover:text-[#64FFDA] transition-colors duration-300"
+            className="text-custom-secondary hover:text-custom-accent3 transition-colors duration-300" // Use new theme colors
             aria-label="Twitter"
           >
-            <FontAwesomeIcon icon={['fab', 'twitter']} />
+            <FontAwesomeIcon icon={["fab", "twitter"]} />
           </a>
-          <a 
-            href="mailto:prince.chisenga@example.com"
-            className="text-[#8892B0] hover:text-[#64FFDA] transition-colors duration-300"
+          <a
+            href={`mailto:your-email@example.com`} // Placeholder email
+            className="text-custom-secondary hover:text-custom-accent3 transition-colors duration-300" // Use new theme colors
             aria-label="Email"
           >
             <FontAwesomeIcon icon="envelope" />
           </a>
         </div>
-        <p className="text-[#8892B0] text-sm font-mono">Designed & Built by Prince Chisenga</p>
-        <p className="text-[#495670] text-xs mt-2">© {currentYear} All Rights Reserved</p>
+        <p className="text-custom-accent1 text-sm font-mono">
+          Designed & Built by {profile.name}
+        </p>{" "}
+        {/* Use profile data and new theme color */}
+        <p className="text-custom-accent2 text-xs mt-2">
+          © {currentYear} All Rights Reserved
+        </p>{" "}
+        {/* Use new theme color */}
       </div>
     </footer>
   );

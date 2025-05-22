@@ -49,13 +49,13 @@ export default function ProjectsPage() {
       <EmailLink />
 
       <main>
-        <div className="pt-20 bg-[#0A192F] bg-opacity-90">
+        <div className="pt-20 bg-custom-primary">
           <div className="container mx-auto px-4 py-16 md:px-8 lg:px-16 xl:px-24">
-            <h1 className="text-4xl md:text-5xl font-bold text-[#CCD6F6] mb-6 animate-in">
+            <h1 className="text-4xl md:text-5xl font-bold text-custom-secondary mb-6 animate-in">
               Projects
             </h1>
             <p
-              className="text-[#8892B0] text-lg mb-12 max-w-2xl animate-in"
+              className="text-custom-accent2 text-lg mb-12 max-w-2xl animate-in"
               style={{ animationDelay: "0.1s" }}
             >
               Explore my recent projects and see how I approach problem-solving
@@ -68,11 +68,11 @@ export default function ProjectsPage() {
                 className="mb-20 animate-in"
                 style={{ animationDelay: "0.2s" }}
               >
-                <h2 className="text-2xl md:text-3xl font-bold text-[#CCD6F6] mb-4">
-                  <span className="text-[#64FFDA]">Featured:</span>{" "}
+                <h2 className="text-2xl md:text-3xl font-bold text-custom-secondary mb-4">
+                  <span className="text-custom-accent3">Featured:</span>{" "}
                   {featuredProject.title}
                 </h2>
-                <Card className="bg-[#112240] border border-[#1E3A5F] overflow-hidden hover:shadow-lg transition-all duration-300">
+                <Card className="bg-custom-primary-lighter border border-custom-accent1 overflow-hidden hover:shadow-lg transition-all duration-300">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="overflow-hidden">
                       <img
@@ -87,13 +87,13 @@ export default function ProjectsPage() {
                           {featuredProject.technologies.map((tech, i) => (
                             <span
                               key={i}
-                              className="text-xs bg-[#1E3A5F] text-[#64FFDA] px-2 py-1 rounded"
+                              className="text-xs bg-custom-primary text-custom-accent3 px-2 py-1 rounded"
                             >
                               {tech}
                             </span>
                           ))}
                         </div>
-                        <p className="text-[#8892B0] mb-6">
+                        <p className="text-custom-accent2 mb-6">
                           {featuredProject.description}
                         </p>
                       </div>
@@ -101,7 +101,7 @@ export default function ProjectsPage() {
                         {featuredProject.links.github && (
                           <Button
                             variant="ghost"
-                            className="border border-[#64FFDA] text-[#64FFDA] hover:bg-[#64FFDA]/10"
+                            className="border border-custom-accent3 text-custom-accent3 hover:bg-custom-accent3/10"
                             onClick={() =>
                               window.open(
                                 featuredProject.links.github,
@@ -119,7 +119,7 @@ export default function ProjectsPage() {
                         {featuredProject.links.live && (
                           <Button
                             variant="outline"
-                            className="border border-[#64FFDA] text-[#64FFDA] hover:bg-[#64FFDA]/10"
+                            className="border border-custom-accent3 text-custom-accent3 hover:bg-custom-accent3/10"
                             onClick={() =>
                               window.open(featuredProject.links.live, "_blank")
                             }
@@ -141,11 +141,11 @@ export default function ProjectsPage() {
         </div>
 
         {/* Project timeline line */}
-        <div className="relative py-16 bg-[#0A192F]">
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-[#1E3A5F] transform -translate-x-1/2 hidden md:block"></div>
+        <div className="relative py-16 bg-custom-primary">
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-custom-accent1 transform -translate-x-1/2 hidden md:block"></div>
 
           <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-24">
-            <h2 className="text-2xl md:text-3xl font-bold text-[#CCD6F6] mb-12 text-center animate-in">
+            <h2 className="text-2xl md:text-3xl font-bold text-custom-secondary mb-12 text-center animate-in">
               Project Timeline
             </h2>
 
@@ -167,13 +167,15 @@ export default function ProjectsPage() {
                         : "md:text-left md:pl-12"
                     )}
                   >
-                    <h3 className="text-xl font-bold text-[#CCD6F6] mb-2">
+                    <h3 className="text-xl font-bold text-custom-secondary mb-2">
                       {project.title}
                     </h3>
-                    <p className="text-[#64FFDA] text-sm mb-2">
+                    <p className="text-custom-accent3 text-sm mb-2">
                       {project.category}
                     </p>
-                    <p className="text-[#8892B0] mb-4">{project.description}</p>
+                    <p className="text-custom-accent2 mb-4">
+                      {project.description}
+                    </p>
                     <div
                       className={cn(
                         "flex flex-wrap gap-2 mb-4",
@@ -183,7 +185,7 @@ export default function ProjectsPage() {
                       {project.technologies.map((tech, i) => (
                         <span
                           key={i}
-                          className="text-xs bg-[#1E3A5F] text-[#64FFDA] px-2 py-1 rounded"
+                          className="text-xs bg-custom-primary-lighter text-custom-accent3 px-2 py-1 rounded"
                         >
                           {tech}
                         </span>
@@ -199,7 +201,7 @@ export default function ProjectsPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-[#64FFDA] hover:bg-[#64FFDA]/10"
+                          className="text-custom-accent3 hover:bg-custom-accent3/10"
                           onClick={() =>
                             window.open(project.links.github, "_blank")
                           }
@@ -215,7 +217,7 @@ export default function ProjectsPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-[#64FFDA] hover:bg-[#64FFDA]/10"
+                          className="text-custom-accent3 hover:bg-custom-accent3/10"
                           onClick={() =>
                             window.open(project.links.live, "_blank")
                           }
@@ -231,7 +233,7 @@ export default function ProjectsPage() {
                   </div>
 
                   {/* Timeline dot */}
-                  <div className="hidden md:block absolute left-1/2 w-5 h-5 bg-[#64FFDA] rounded-full transform -translate-x-1/2 shadow-lg shadow-[#64FFDA]/20"></div>
+                  <div className="hidden md:block absolute left-1/2 w-5 h-5 bg-custom-accent3 rounded-full transform -translate-x-1/2 shadow-lg shadow-custom-accent3/20"></div>
 
                   {/* Image section */}
                   <div className="w-full md:w-1/2 p-4">

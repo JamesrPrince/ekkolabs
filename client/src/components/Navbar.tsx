@@ -32,13 +32,14 @@ export default function Navbar() {
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-300",
         scrolled
-          ? "bg-[#0A192F]/90 backdrop-blur-sm py-3 shadow-md"
+          ? "bg-background/90 backdrop-blur-sm py-3 shadow-md border-b border-border" // Use new theme colors
           : "bg-transparent py-4"
       )}
     >
       <div className="container mx-auto px-4 flex justify-between items-center">
         <Link href="/">
-          <span className="text-[#64FFDA] font-mono text-2xl font-bold cursor-pointer">
+          {/* Use accent3 for the logo text color for vibrancy */}
+          <span className="text-custom-accent3 font-mono text-2xl font-bold cursor-pointer">
             PC
           </span>
         </Link>
@@ -51,11 +52,11 @@ export default function Navbar() {
                 <Link href={link.href}>
                   <span
                     className={cn(
-                      "text-[#8892B0] hover:text-[#64FFDA] transition-colors duration-300 text-sm cursor-pointer",
-                      location === link.href && "text-[#64FFDA]"
+                      "text-custom-secondary hover:text-custom-accent3 transition-colors duration-300 text-sm cursor-pointer", // Use new theme colors
+                      location === link.href && "text-custom-accent3" // Active link color
                     )}
                   >
-                    <span className="text-[#64FFDA] font-mono mr-1">{`0${
+                    <span className="text-custom-accent3 font-mono mr-1">{`0${
                       index + 1
                     }.`}</span>
                     {link.label}
@@ -71,7 +72,7 @@ export default function Navbar() {
           variant="ghost"
           size="icon"
           onClick={toggleTheme}
-          className="hidden md:flex text-[#8892B0] hover:text-[#64FFDA] hover:bg-transparent"
+          className="hidden md:flex text-custom-secondary hover:text-custom-accent3 hover:bg-transparent" // Use new theme colors
         >
           <FontAwesomeIcon
             icon={theme === "dark" ? "sun" : "moon"}
@@ -84,7 +85,7 @@ export default function Navbar() {
           variant="ghost"
           size="icon"
           onClick={toggleMenu}
-          className="md:hidden text-[#8892B0] hover:text-[#64FFDA] hover:bg-transparent"
+          className="md:hidden text-custom-secondary hover:text-custom-accent3 hover:bg-transparent" // Use new theme colors
         >
           <FontAwesomeIcon icon="bars" className="h-5 w-5" />
         </Button>
@@ -93,7 +94,7 @@ export default function Navbar() {
       {/* Mobile Menu */}
       <div
         className={cn(
-          "md:hidden bg-[#112240] absolute w-full transform transition-transform duration-300",
+          "md:hidden bg-custom-primary absolute w-full transform transition-transform duration-300 border-b border-border", // Use new theme colors
           isMenuOpen
             ? "translate-y-0 opacity-100"
             : "-translate-y-full opacity-0"
@@ -108,12 +109,12 @@ export default function Navbar() {
                     className={cn(
                       "block w-full text-left py-2 pl-4 border-l-2 border-transparent cursor-pointer",
                       location === link.href
-                        ? "text-[#64FFDA] border-l-[#64FFDA]"
-                        : "text-[#8892B0] hover:text-[#64FFDA] hover:border-l-[#64FFDA]"
+                        ? "text-custom-accent3 border-l-custom-accent3" // Active link color
+                        : "text-custom-secondary hover:text-custom-accent3 hover:border-l-custom-accent3" // Use new theme colors
                     )}
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    <span className="text-[#64FFDA] font-mono mr-2">{`0${
+                    <span className="text-custom-accent3 font-mono mr-2">{`0${
                       index + 1
                     }.`}</span>
                     {link.label}
@@ -126,7 +127,7 @@ export default function Navbar() {
                 variant="ghost"
                 size="sm"
                 onClick={toggleTheme}
-                className="text-[#8892B0] hover:text-[#64FFDA] hover:bg-transparent"
+                className="text-custom-secondary hover:text-custom-accent3 hover:bg-transparent" // Use new theme colors
               >
                 <FontAwesomeIcon
                   icon={theme === "dark" ? "sun" : "moon"}
