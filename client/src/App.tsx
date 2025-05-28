@@ -53,24 +53,28 @@ function App() {
 
     return () => clearTimeout(timer);
   }, []);
-  
+
   // Error handler for logging errors to analytics or monitoring service
   const handleError = (error: Error, errorInfo: React.ErrorInfo) => {
     // In production, you could log to a service like Sentry
     console.error("Application error:", error, errorInfo);
-    
+
     // Track error in analytics using our utility
-    import('./lib/analytics').then(analytics => {
-      analytics.analyticsUtils.trackEvent({
-        name: 'application_error',
-        properties: { 
-          message: error.message,
-          stack: process.env.NODE_ENV === 'production' ? undefined : error.stack
-        }
+    import("./lib/analytics")
+      .then((analytics) => {
+        analytics.analyticsUtils.trackEvent({
+          name: "application_error",
+          properties: {
+            message: error.message,
+            ...(process.env.NODE_ENV === "production"
+              ? {}
+              : { stack: error.stack || "" }),
+          },
+        });
+      })
+      .catch((err) => {
+        console.error("Failed to load analytics for error tracking:", err);
       });
-    }).catch(err => {
-      console.error('Failed to load analytics for error tracking:', err);
-    });
   };
 
   return (
@@ -79,12 +83,12 @@ function App() {
         <TooltipProvider>
           {loading && <LoadingIndicator isLoading={loading} />}
           <ErrorBoundary onError={handleError}>
-            <PageViewTracker debug={process.env.NODE_ENV !== 'production'}>
+            <PageViewTracker debug={process.env.NODE_ENV !== "production"}>
               <Router />
             </PageViewTracker>
           </ErrorBoundary>
           <Toaster />
-          <Analytics debug={process.env.NODE_ENV !== 'production'} />
+          <Analytics debug={process.env.NODE_ENV !== "production"} />
         </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>

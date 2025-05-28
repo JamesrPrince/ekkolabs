@@ -14,14 +14,14 @@ import React, { Component, ErrorInfo, ReactNode } from "react";
 interface ErrorBoundaryProps {
   /** The child components to be rendered and monitored for errors */
   children: ReactNode;
-  
-  /** 
+
+  /**
    * Custom UI to show when an error occurs.
    * Can be a React node or a function that receives the error and returns a React node
    */
   fallback?: ReactNode | ((error: Error) => ReactNode);
-  
-  /** 
+
+  /**
    * Optional callback function that will be called when an error is caught
    * Useful for logging to analytics or monitoring services
    */
@@ -35,7 +35,7 @@ interface ErrorBoundaryProps {
 interface ErrorBoundaryState {
   /** Whether an error has been caught */
   hasError: boolean;
-  
+
   /** The error object that was caught, or null if no error */
   error: Error | null;
 }
@@ -43,25 +43,25 @@ interface ErrorBoundaryState {
 /**
  * Error Boundary component to catch JavaScript errors in child components,
  * log those errors, and display a fallback UI instead of crashing.
- * 
+ *
  * This component:
  * - Prevents the entire app from crashing when there's an error
  * - Provides a way to display user-friendly error messages
  * - Enables error logging and monitoring
  * - Allows for custom fallback UI
- * 
+ *
  * @example
  * ```tsx
  * // Basic usage
  * <ErrorBoundary>
  *   <MyComponent />
  * </ErrorBoundary>
- * 
+ *
  * // With custom fallback UI
  * <ErrorBoundary fallback={<div>Something went wrong</div>}>
  *   <MyComponent />
  * </ErrorBoundary>
- * 
+ *
  * // With dynamic fallback based on the error
  * <ErrorBoundary
  *   fallback={(error) => (
@@ -70,7 +70,7 @@ interface ErrorBoundaryState {
  * >
  *   <MyComponent />
  * </ErrorBoundary>
- * 
+ *
  * // With error logging
  * <ErrorBoundary
  *   onError={(error, errorInfo) => {
@@ -94,7 +94,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     // Log the error to an error reporting service
     console.error("Error caught by ErrorBoundary:", error, errorInfo);
-    
+
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
     }
@@ -104,9 +104,15 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     if (this.state.hasError) {
       if (this.props.fallback) {
         if (typeof this.props.fallback === "function" && this.state.error) {
-          return this.props.fallback(this.state.error);
+          // If fallback is a function, call it with the error
+          return (this.props.fallback as (error: Error) => ReactNode)(
+            this.state.error
+          );
         }
-        return this.props.fallback;
+        // Only render fallback if it is a valid ReactNode (not a function)
+        if (typeof this.props.fallback !== "function") {
+          return this.props.fallback;
+        }
       }
 
       // Default fallback UI
