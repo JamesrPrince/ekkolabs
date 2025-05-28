@@ -15,7 +15,14 @@ export default defineConfig({
           ),
         ]
       : []),
-  ],
+    process.env.ANALYZE === "true" ? 
+      (await import("rollup-plugin-visualizer")).visualizer({
+        open: true,
+        filename: "dist/stats.html",
+        gzipSize: true,
+      }) 
+      : null,
+  ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),

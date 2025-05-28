@@ -1,8 +1,18 @@
-import { useState, useEffect, Suspense, lazy } from "react";
-import { Switch, Route } from "wouter";
-
-// Impor t our enhanced Analytics components
-import { Analytics, PageViewTracker } from "./lib/analytics";
+import { useState, useEffect, Suspense, lazy } from "react";  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <TooltipProvider>
+          {loading && <LoadingIndicator isLoading={loading} />}
+          <ErrorBoundary onError={handleError}>
+            <Router />
+          </ErrorBoundary>
+          <Toaster />
+          <Analytics />
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );itch, Route } from "wouter";
+import { Analytics } from "@vercel/analytics/react";
 
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -58,33 +68,16 @@ function App() {
   const handleError = (error: Error, errorInfo: React.ErrorInfo) => {
     // In production, you could log to a service like Sentry
     console.error("Application error:", error, errorInfo);
-    
-    // Track error in analytics using our utility
-    import('./lib/analytics').then(analytics => {
-      analytics.analyticsUtils.trackEvent({
-        name: 'application_error',
-        properties: { 
-          message: error.message,
-          stack: process.env.NODE_ENV === 'production' ? undefined : error.stack
-        }
-      });
-    }).catch(err => {
-      console.error('Failed to load analytics for error tracking:', err);
-    });
   };
 
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <TooltipProvider>
-          {loading && <LoadingIndicator isLoading={loading} />}
-          <ErrorBoundary onError={handleError}>
-            <PageViewTracker debug={process.env.NODE_ENV !== 'production'}>
-              <Router />
-            </PageViewTracker>
-          </ErrorBoundary>
+          <LoadingIndicator isLoading={loading} />
           <Toaster />
-          <Analytics debug={process.env.NODE_ENV !== 'production'} />
+          <Router />
+          <Analytics />
         </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>

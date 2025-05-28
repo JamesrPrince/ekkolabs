@@ -1,12 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTheme } from "@/components/ThemeProvider";
 import { NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "wouter";
+import { useTrackedCallback } from "@/hooks/use-memo-callback";
+import { a11y } from "@/lib/a11y";
 
-export default function Navbar() {
+const Navbar = memo(function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { theme, toggleTheme } = useTheme();
@@ -23,9 +25,9 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const toggleMenu = () => {
+  const toggleMenu = useTrackedCallback(() => {
     setIsMenuOpen(!isMenuOpen);
-  };
+  }, [isMenuOpen], 'toggleMenu');
 
   return (
     <header
@@ -73,10 +75,14 @@ export default function Navbar() {
           size="icon"
           onClick={toggleTheme}
           className="hidden md:flex text-custom-secondary hover:text-custom-accent3 hover:bg-transparent" // Use new theme colors
+          {...a11y.button({
+            'aria-label': theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode',
+          })}
         >
           <FontAwesomeIcon
             icon={theme === "dark" ? "sun" : "moon"}
             className="h-5 w-5"
+            aria-hidden="true"
           />
         </Button>
 
@@ -86,13 +92,22 @@ export default function Navbar() {
           size="icon"
           onClick={toggleMenu}
           className="md:hidden text-custom-secondary hover:text-custom-accent3 hover:bg-transparent" // Use new theme colors
+          {...a11y.button({
+            'aria-label': isMenuOpen ? 'Close menu' : 'Open menu',
+            'aria-expanded': isMenuOpen,
+            'aria-controls': 'mobile-menu',
+          })}
         >
-          <FontAwesomeIcon icon="bars" className="h-5 w-5" />
+          <FontAwesomeIcon icon="bars" className="h-5 w-5" aria-hidden="true" />
         </Button>
       </div>
 
       {/* Mobile Menu */}
       <div
+        id="mobile-menu"
+        role="navigation"
+        aria-label="Mobile navigation"
+        aria-hidden={!isMenuOpen}
         className={cn(
           "md:hidden bg-custom-primary absolute w-full transform transition-transform duration-300 border-b border-border", // Use new theme colors
           isMenuOpen
@@ -141,4 +156,6 @@ export default function Navbar() {
       </div>
     </header>
   );
-}
+});
+
+export default Navbar;

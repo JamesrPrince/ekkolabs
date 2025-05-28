@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Browser Issues Test</title>
+</head>
+<body>
+  <h1>Testing Browser Issues</h1>
+  <div id="results"></div>
+
+  <script>
+    // Check for common browser issues
+    const resultsDiv = document.getElementById('results');
+    
+    function addResult(title, passed) {
+      const el = document.createElement('div');
+      el.style.color = passed ? 'green' : 'red';
+      el.innerHTML = `${passed ? '✓' : '✗'} ${title}`;
+      resultsDiv.appendChild(el);
+    }
+
+    // Check for LocalStorage
+    try {
+      localStorage.setItem('test', 'test');
+      localStorage.removeItem('test');
+      addResult('LocalStorage works', true);
+    } catch (e) {
+      addResult('LocalStorage error: ' + e.message, false);
+    }
+
+    // Check for Fetch API
+    if (window.fetch) {
+      addResult('Fetch API supported', true);
+    } else {
+      addResult('Fetch API not supported', false);
+    }
+
+    // Check for Flex/Grid support
+    const div = document.createElement('div');
+    div.style.display = 'flex';
+    addResult('Flexbox CSS support', div.style.display === 'flex');
+    
+    div.style.display = 'grid';
+    addResult('Grid CSS support', div.style.display === 'grid');
+
+    // Check for CSS variables
+    const style = document.createElement('style');
+    style.innerHTML = ':root { --test-var: red; }';
+    document.head.appendChild(style);
+    
+    const testDiv = document.createElement('div');
+    testDiv.style.color = 'var(--test-var)';
+    document.body.appendChild(testDiv);
+    
+    const computedStyle = window.getComputedStyle(testDiv);
+    addResult('CSS Variables support', computedStyle.color === 'rgb(255, 0, 0)');
+
+    // Check for console errors
+    const errors = [];
+    const originalConsoleError = console.error;
+    console.error = function() {
+      errors.push(Array.from(arguments).join(' '));
+      originalConsoleError.apply(console, arguments);
+    };
+
+    window.onerror = function(message, source, lineno, colno, error) {
+      addResult(`JavaScript error: ${message}`, false);
+      return false;
+    };
+
+    // Report any errors after a delay
+    setTimeout(() => {
+      if (errors.length === 0) {
+        addResult('No console errors detected', true);
+      } else {
+        errors.forEach(err => addResult('Console error: ' + err, false));
+      }
+      
+      // Restore console.error
+      console.error = originalConsoleError;
+    }, 1000);
+  </script>
+</body>
+</html>
