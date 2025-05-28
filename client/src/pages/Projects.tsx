@@ -104,7 +104,7 @@ export default function ProjectsPage() {
                             className="border border-custom-accent3 text-custom-accent3 hover:bg-custom-accent3/10"
                             onClick={() =>
                               window.open(
-                                featuredProject.links.github,
+                                featuredProject.links.github || "",
                                 "_blank"
                               )
                             }
@@ -203,7 +203,7 @@ export default function ProjectsPage() {
                           size="sm"
                           className="text-custom-accent3 hover:bg-custom-accent3/10"
                           onClick={() =>
-                            window.open(project.links.github, "_blank")
+                            window.open(project.links.github || "", "_blank")
                           }
                         >
                           <FontAwesomeIcon
