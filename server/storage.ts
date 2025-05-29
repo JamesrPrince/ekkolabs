@@ -1,42 +1,54 @@
-import { users, contactMessages, type User, type InsertUser, type ContactMessage, type InsertContactMessage } from "@shared/schema";
-import { db } from "./db";
-import { eq } from "drizzle-orm";
+import { User, ContactMessages } from '@prisma/client';
 
-// Keep the interface the same
-export interface IStorage {
-  getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
-  saveContactMessage(message: InsertContactMessage): Promise<ContactMessage>;
+import { prisma } from "./db";
+
+// Define proper interfaces for input types
+export interface UserInput {
+  username: string;
+  password: string;
+  name?: string;
+  email?: string;
 }
 
-// Replace MemStorage with DatabaseStorage that uses Drizzle ORM
+export interface ContactMessageInput {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
+// Keep the interface the same but with updated types
+export interface IStorage {
+  getUser(id: number): Promise<User | null>;
+  getUserByUsername(username: string): Promise<User | null>;
+  createUser(user: UserInput): Promise<User>;
+  saveContactMessage(message: ContactMessageInput): Promise<ContactMessages>;
+}
+
+// Replace database access with Prisma
 export class DatabaseStorage implements IStorage {
-  async getUser(id: number): Promise<User | undefined> {
-    const results = await db.select().from(users).where(eq(users.id, id));
-    return results.length > 0 ? results[0] : undefined;
+  async getUser(id: number): Promise<User | null> {
+    return await prisma.user.findUnique({
+      where: { id }
+    });
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    const results = await db.select().from(users).where(eq(users.username, username));
-    return results.length > 0 ? results[0] : undefined;
+  async getUserByUsername(username: string): Promise<User | null> {
+    return await prisma.user.findUnique({
+      where: { username }
+    });
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const results = await db.insert(users).values(insertUser).returning();
-    return results[0];
+  async createUser(user: UserInput): Promise<User> {
+    return await prisma.user.create({
+      data: user
+    });
   }
 
-  async saveContactMessage(insertMessage: InsertContactMessage): Promise<ContactMessage> {
-    const now = new Date().toISOString();
-    const results = await db
-      .insert(contactMessages)
-      .values({
-        ...insertMessage,
-        createdAt: now
-      })
-      .returning();
-    return results[0];
+  async saveContactMessage(message: ContactMessageInput): Promise<ContactMessages> {
+    return await prisma.contactMessages.create({
+      data: message
+    });
   }
 }
 

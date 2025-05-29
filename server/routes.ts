@@ -1,14 +1,17 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import { createTransport, createTestAccount, getTestMessageUrl } from "nodemailer";
+import type { SendMailOptions, SentMessageInfo } from 'nodemailer';
+
+import { prisma } from "./db";
 import { storage } from "./storage";
-import { insertContactMessageSchema } from "@shared/schema";
-import nodemailer from "nodemailer";
+import { getPosts, getPostBySlug, createPost } from "../api/blog";
 
 // Email transporter based on environment
 const getEmailTransporter = async () => {
   // Check if we have SMTP settings in environment variables
   if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
-    return nodemailer.createTransport({
+    return createTransport({
       host: process.env.SMTP_HOST,
       port: parseInt(process.env.SMTP_PORT || "587"),
       secure: process.env.SMTP_SECURE === "true",
@@ -21,8 +24,8 @@ const getEmailTransporter = async () => {
 
   // For development, we'll use a test account
   try {
-    const testAccount = await nodemailer.createTestAccount();
-    return nodemailer.createTransport({
+    const testAccount = await createTestAccount();
+    return createTransport({
       host: "smtp.ethereal.email",
       port: 587,
       secure: false,
@@ -35,11 +38,11 @@ const getEmailTransporter = async () => {
     console.error("Failed to create test email account:", error);
     // Return a placeholder transporter that logs instead of sending
     return {
-      sendMail: async (options: any) => {
+      sendMail: async (options: SendMailOptions) => {
         console.log("Email would be sent:", options);
-        return { messageId: "mock-id" };
+        return { messageId: "mock-id" } as SentMessageInfo;
       },
-    } as any;
+    };
   }
 };
 
@@ -47,59 +50,100 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Contact form submission endpoint
   app.post("/api/contact", async (req, res) => {
     try {
-      // Validate incoming data
-      const validatedData = insertContactMessageSchema.parse(req.body);
-
-      // Store the message
-      const savedMessage = await storage.saveContactMessage(validatedData);
-
-      try {
-        // Send email notification with appropriate transporter
-        const transporter = await getEmailTransporter();
-
-        // Send email
-        const info = await transporter.sendMail({
-          from: '"Portfolio Website" <contact@example.com>',
-          to: "prince.chisenga@example.com", // recipient email
-          subject: `New contact request: ${validatedData.subject}`,
-          text: `
-            Name: ${validatedData.name}
-            Email: ${validatedData.email}
-            Subject: ${validatedData.subject}
-            
-            Message:
-            ${validatedData.message}
-          `,
-          html: `
-            <h2>New Contact Request</h2>
-            <p><strong>Name:</strong> ${validatedData.name}</p>
-            <p><strong>Email:</strong> ${validatedData.email}</p>
-            <p><strong>Subject:</strong> ${validatedData.subject}</p>
-            <p><strong>Message:</strong></p>
-            <p>${validatedData.message.replace(/\n/g, "<br>")}</p>
-          `,
+      // Basic validation
+      const { name, email, subject, message } = req.body;
+      if (!name || !email || !subject || !message) {
+        return res.status(400).json({
+          success: false,
+          message: 'All fields are required',
         });
+      }
+      
+      // Save to database
+      const contactData = { name, email, subject, message };
+      await storage.saveContactMessage(contactData);
 
-        console.log("Email sent:", info.messageId);
-        console.log("Preview URL:", nodemailer.getTestMessageUrl(info));
-      } catch (emailError) {
-        console.error("Error sending email notification:", emailError);
-        // Continue anyway - we've stored the message
+      // Send email notification (if configured)
+      const transporter = await getEmailTransporter();
+      const info = await transporter.sendMail({
+        from: '"Contact Form" <contact@ekkolabs.com>',
+        to: process.env.CONTACT_EMAIL || "admin@ekkolabs.com",
+        subject: `New Contact Form: ${subject}`,
+        text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+        html: `<p><strong>Name:</strong> ${name}</p>
+               <p><strong>Email:</strong> ${email}</p>
+               <p><strong>Message:</strong> ${message}</p>`,
+      });
+
+      console.log("Message sent: %s", info.messageId);
+      
+      // For test accounts, log the URL where the message can be viewed
+      if (process.env.NODE_ENV === "development") {
+        try {
+          // Using type assertion as a workaround since we know the structure is compatible
+          const url = getTestMessageUrl(info as unknown as SentMessageInfo);
+          if (url) {
+            console.log("Preview URL:", url);
+          }
+        } catch (err) {
+          console.log("Could not get test message URL");
+        }
       }
 
-      res
-        .status(201)
-        .json({ success: true, message: "Message received successfully" });
+      res.status(200).json({
+        success: true,
+        message: "Thank you for your message. We'll be in touch soon!",
+      });
     } catch (error) {
-      console.error("Contact form error:", error);
-      res.status(400).json({
+      console.error("Error processing contact form:", error);
+      res.status(500).json({
         success: false,
-        message: "Invalid form data. Please check your inputs and try again.",
+        message: "Sorry, we couldn't process your message. Please try again later.",
       });
     }
   });
 
-  const httpServer = createServer(app);
+  // Blog API routes
+  app.get("/api/blog/posts", getPosts);
+  app.get("/api/blog/posts/:slug", getPostBySlug);
+  app.post("/api/blog/posts", createPost);
+  
+  // Add blog category routes
+  app.get("/api/blog/categories", async (_req, res) => {
+    try {
+      const categories = await prisma.category.findMany({
+        include: {
+          _count: {
+            select: { posts: true }
+          }
+        }
+      });
+      
+      res.status(200).json({ data: categories });
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      res.status(500).json({ error: "Failed to fetch categories" });
+    }
+  });
+  
+  // Add blog tags routes
+  app.get("/api/blog/tags", async (_req, res) => {
+    try {
+      const tags = await prisma.tag.findMany({
+        include: {
+          _count: {
+            select: { posts: true }
+          }
+        }
+      });
+      
+      res.status(200).json({ data: tags });
+    } catch (error) {
+      console.error("Error fetching tags:", error);
+      res.status(500).json({ error: "Failed to fetch tags" });
+    }
+  });
 
-  return httpServer;
+  // Create HTTP server for the Express app
+  return createServer(app);
 }

@@ -1,27 +1,26 @@
-import { Pool, neonConfig } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-serverless";
-import ws from "ws";
-import * as schema from "@shared/schema";
+import { PrismaClient } from "@prisma/client/edge"; // Import from @prisma/client/edge for Vercel
+import { withAccelerate } from "@prisma/extension-accelerate";
 
-neonConfig.webSocketConstructor = ws;
+// Initialize Prisma Client with Accelerate
+// The connection URL is loaded from the DATABASE_URL environment variable
+const prisma = new PrismaClient().$extends(withAccelerate());
 
-// Handle database connection based on environment
-const isDevelopment = process.env.NODE_ENV === "development";
-const isServerless = process.env.VERCEL === "1";
+export { prisma };
 
-// For Vercel environment or any other serverless platform
-const databaseUrl = process.env.DATABASE_URL;
-
-// Only throw error if not in development and no DATABASE_URL
-if (!databaseUrl && !isDevelopment) {
-  console.error("Missing DATABASE_URL in production environment");
-  // In serverless, we don't want to crash the entire app
-  if (!isServerless) {
-    throw new Error(
-      "DATABASE_URL must be set in production. Did you forget to provision a database?"
+// Optional: Add a connection test or health check
+async function testConnection() {
+  try {
+    await prisma.$connect();
+    console.log(
+      "Successfully connected to the database using Prisma Accelerate."
     );
+    await prisma.$disconnect();
+  } catch (error) {
+    console.error("Failed to connect to the database:", error);
   }
 }
 
-export const pool = new Pool({ connectionString: databaseUrl });
-export const db = drizzle({ client: pool, schema });
+// You might call this during app startup in development, or rely on Prisma's lazy connection
+if (process.env.NODE_ENV === "development") {
+  // testConnection(); // Uncomment to test connection on startup
+}

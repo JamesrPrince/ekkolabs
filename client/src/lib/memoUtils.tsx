@@ -5,7 +5,7 @@
  * @version 1.0.0
  */
 
-import React from "react";
+import React, { memo } from "react";
 
 /**
  * A higher-order component that memoizes a component with custom props comparison
@@ -19,18 +19,18 @@ export function memoWithCustomCompare<P extends object>(
   Component: React.ComponentType<P>,
   areEqual?: (prevProps: Readonly<P>, nextProps: Readonly<P>) => boolean
 ): React.MemoExoticComponent<React.ComponentType<P>> {
-  return React.memo(Component, areEqual);
+  return memo(Component, areEqual);
 }
 
 /**
  * Creates a deep equality comparison function for component props
  *
  * @param {string[]} [ignoredProps] - Props to ignore in the comparison
- * @returns {(prevProps: Readonly<any>, nextProps: Readonly<any>) => boolean} Comparison function
+ * @returns {(prevProps: Readonly<P>, nextProps: Readonly<P>) => boolean} Comparison function
  */
-export function createDeepPropsCompare(
+export function createDeepPropsCompare<P extends Record<string, unknown>>(
   ignoredProps: string[] = []
-): (prevProps: Readonly<any>, nextProps: Readonly<any>) => boolean {
+): (prevProps: Readonly<P>, nextProps: Readonly<P>) => boolean {
   return (prevProps, nextProps) => {
     // Get all keys from both objects
     const allKeys = Array.from(
@@ -56,11 +56,11 @@ export function createDeepPropsCompare(
 /**
  * Deep equality comparison of two values
  *
- * @param {any} a - First value
- * @param {any} b - Second value
+ * @param {unknown} a - First value
+ * @param {unknown} b - Second value
  * @returns {boolean} Whether the values are deeply equal
  */
-function deepEqual(a: any, b: any): boolean {
+function deepEqual(a: unknown, b: unknown): boolean {
   // Same reference or primitive equality
   if (a === b) return true;
 
@@ -85,15 +85,22 @@ function deepEqual(a: any, b: any): boolean {
   }
 
   // Handle objects
-  if (typeof a === "object" && typeof b === "object") {
-    const keysA = Object.keys(a);
-    const keysB = Object.keys(b);
+  if (
+    typeof a === "object" &&
+    typeof b === "object" &&
+    a !== null &&
+    b !== null
+  ) {
+    const objA = a as Record<string, unknown>;
+    const objB = b as Record<string, unknown>;
+    const keysA = Object.keys(objA);
+    const keysB = Object.keys(objB);
 
     if (keysA.length !== keysB.length) return false;
 
     for (const key of keysA) {
-      if (!Object.prototype.hasOwnProperty.call(b, key)) return false;
-      if (!deepEqual(a[key], b[key])) return false;
+      if (!Object.prototype.hasOwnProperty.call(objB, key)) return false;
+      if (!deepEqual(objA[key], objB[key])) return false;
     }
 
     return true;
@@ -144,7 +151,7 @@ export function memoWithName<P extends object>(
   name: string,
   areEqual?: (prevProps: Readonly<P>, nextProps: Readonly<P>) => boolean
 ): React.MemoExoticComponent<React.ComponentType<P>> {
-  const MemoizedComponent = React.memo(Component, areEqual);
+  const MemoizedComponent = memo(Component, areEqual);
   MemoizedComponent.displayName = `Memo(${name})`;
   return MemoizedComponent;
 }
