@@ -1,7 +1,11 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { createTransport, createTestAccount, getTestMessageUrl } from "nodemailer";
-import type { SendMailOptions, SentMessageInfo } from 'nodemailer';
+import {
+  createTransport,
+  createTestAccount,
+  getTestMessageUrl,
+} from "nodemailer";
+import type { SendMailOptions, SentMessageInfo } from "nodemailer";
 
 import { prisma } from "./db";
 import { storage } from "./storage";
@@ -55,10 +59,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!name || !email || !subject || !message) {
         return res.status(400).json({
           success: false,
-          message: 'All fields are required',
+          message: "All fields are required",
         });
       }
-      
+
       // Save to database
       const contactData = { name, email, subject, message };
       await storage.saveContactMessage(contactData);
@@ -76,7 +80,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       console.log("Message sent: %s", info.messageId);
-      
+
       // For test accounts, log the URL where the message can be viewed
       if (process.env.NODE_ENV === "development") {
         try {
@@ -98,7 +102,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("Error processing contact form:", error);
       res.status(500).json({
         success: false,
-        message: "Sorry, we couldn't process your message. Please try again later.",
+        message:
+          "Sorry, we couldn't process your message. Please try again later.",
       });
     }
   });
@@ -107,36 +112,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/blog/posts", getPosts);
   app.get("/api/blog/posts/:slug", getPostBySlug);
   app.post("/api/blog/posts", createPost);
-  
+
   // Add blog category routes
   app.get("/api/blog/categories", async (_req, res) => {
     try {
       const categories = await prisma.category.findMany({
         include: {
           _count: {
-            select: { posts: true }
-          }
-        }
+            select: { posts: true },
+          },
+        },
       });
-      
+
       res.status(200).json({ data: categories });
     } catch (error) {
       console.error("Error fetching categories:", error);
       res.status(500).json({ error: "Failed to fetch categories" });
     }
   });
-  
+
   // Add blog tags routes
   app.get("/api/blog/tags", async (_req, res) => {
     try {
       const tags = await prisma.tag.findMany({
         include: {
           _count: {
-            select: { posts: true }
-          }
-        }
+            select: { posts: true },
+          },
+        },
       });
-      
+
       res.status(200).json({ data: tags });
     } catch (error) {
       console.error("Error fetching tags:", error);

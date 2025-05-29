@@ -1,4 +1,4 @@
-import { User, ContactMessages } from '@prisma/client';
+import { User, ContactMessages } from "@prisma/client";
 
 import { prisma } from "./db";
 
@@ -29,25 +29,27 @@ export interface IStorage {
 export class DatabaseStorage implements IStorage {
   async getUser(id: number): Promise<User | null> {
     return await prisma.user.findUnique({
-      where: { id }
+      where: { id },
     });
   }
 
   async getUserByUsername(username: string): Promise<User | null> {
     return await prisma.user.findUnique({
-      where: { username }
+      where: { username },
     });
   }
 
   async createUser(user: UserInput): Promise<User> {
     return await prisma.user.create({
-      data: user
+      data: user,
     });
   }
 
-  async saveContactMessage(message: ContactMessageInput): Promise<ContactMessages> {
+  async saveContactMessage(
+    message: ContactMessageInput
+  ): Promise<ContactMessages> {
     return await prisma.contactMessages.create({
-      data: message
+      data: message,
     });
   }
 }
