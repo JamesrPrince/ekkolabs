@@ -1,13 +1,10 @@
-import { useState, useEffect, memo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useTheme } from "@/components/ThemeProvider";
-import { NAV_LINKS } from "@/lib/constants";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect, memo } from "react";
 import { Link, useLocation } from "wouter";
-import { useTrackedCallback } from "@/hooks/use-memo-callback";
-import { a11y } from "@/lib/a11y";
-import { useAuth } from "@/contexts/AuthContext";
+
+import { useTheme } from "@/components/ThemeProvider";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,7 +13,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/contexts/AuthContext";
+import { useTrackedCallback } from "@/hooks/use-memo-callback";
+import { a11y } from "@/lib/a11y";
+import { NAV_LINKS } from "@/lib/constants";
+import { cn } from "@/lib/utils";
+
 
 const Navbar = memo(function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

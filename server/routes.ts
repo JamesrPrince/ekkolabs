@@ -9,7 +9,6 @@ import type { SendMailOptions, SentMessageInfo } from "nodemailer";
 
 import { prisma } from "./db";
 import { storage } from "./storage";
-import { getPosts, getPostBySlug, createPost } from "../api/blog";
 import {
   login,
   register,
@@ -19,12 +18,7 @@ import {
   authenticate,
   authorizeAdmin,
 } from "../api/auth";
-import {
-  getCommentsForPost,
-  addComment,
-  updateComment,
-  deleteComment,
-} from "../api/comments";
+import { getPosts, getPostBySlug, createPost } from "../api/blog";
 import {
   getCommentsForPost,
   addComment,

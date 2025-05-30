@@ -1,21 +1,13 @@
-import { useLocation } from "wouter";
-import { Helmet } from "react-helmet-async";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
+import { useLocation } from "wouter";
+import { z } from "zod";
 
-import { useAuth } from "@/contexts/AuthContext";
-
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import {
   Card,
   CardContent,
@@ -24,10 +16,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useAuth } from "@/contexts/AuthContext";
 
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 // Form schema
 const registerSchema = z

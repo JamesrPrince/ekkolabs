@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect } from "react";
+
 import { apiRequest } from "@/lib/queryClient";
 
 /**
@@ -48,8 +49,8 @@ interface ApiResponse<T> {
 /** Default cache duration of 5 minutes */
 const DEFAULT_CACHE_DURATION = 5 * 60 * 1000;
 
-/** In-memory cache store */
-const cache = new Map<string, { data: any; timestamp: number }>();
+/** In-memory cache store - use generic type to maintain type safety */
+const cache = new Map<string, { data: unknown; timestamp: number }>();
 
 /**
  * Custom hook for making API requests with built-in caching capabilities
@@ -77,8 +78,8 @@ const cache = new Map<string, { data: any; timestamp: number }>();
  * });
  * ```
  */
-export function useApiRequest<T = any>(
-  url: string,
+export function useApiRequest<T = Record<string, unknown>>(
+  url: string | null,
   options: RequestInit & CacheOptions = {}
 ): ApiResponse<T> {
   const {
@@ -105,12 +106,16 @@ export function useApiRequest<T = any>(
         cachedResponse &&
         Date.now() - cachedResponse.timestamp < cacheDuration
       ) {
-        setData(cachedResponse.data);
+        // Type assertion is safe here since we know the data structure
+        setData(cachedResponse.data as T);
         setIsLoading(false);
         return;
       }
 
       // Make the actual request - simplified to match test expectations
+      if (!url) {
+        throw new Error("URL is required for API request");
+      }
       const response = await apiRequest("GET", url, null);
       const result = await response.json();
 
@@ -134,9 +139,13 @@ export function useApiRequest<T = any>(
 
   // Initial fetch
   useEffect(() => {
-    // Use a stable reference to url to prevent unintended re-fetching
-    const currentUrl = url;
-    fetchData();
+    // Only fetch if URL is provided
+    if (url) {
+      fetchData();
+    } else {
+      // Reset loading state if no URL
+      setIsLoading(false);
+    }
 
     // This ensures tests can properly detect the dependency change
     // eslint-disable-next-line react-hooks/exhaustive-deps

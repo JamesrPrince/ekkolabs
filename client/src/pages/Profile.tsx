@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
-import { useLocation } from "wouter";
-import { Helmet } from "react-helmet-async";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
+import { useLocation } from "wouter";
+import { z } from "zod";
 
-import { useAuth } from "@/contexts/AuthContext";
-
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Card,
   CardContent,
@@ -17,7 +17,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Form,
   FormControl,
@@ -26,11 +25,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Profile form schema
 const profileSchema = z.object({

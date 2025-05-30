@@ -1,14 +1,15 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect } from "react";
-import Navbar from "@/components/Navbar";
-import SocialLinks from "@/components/SocialLinks";
+
 import EmailLink from "@/components/EmailLink";
 import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 import ProjectsSection from "@/components/sections/Projects";
+import SocialLinks from "@/components/SocialLinks";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { cn } from "@/lib/utils";
 import { projects } from "@/data/profile";
+import { cn } from "@/lib/utils";
 
 export default function ProjectsPage() {
   const [featuredProject, setFeaturedProject] = useState(

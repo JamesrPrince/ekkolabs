@@ -1,24 +1,26 @@
-import { useEffect } from "react";
-import { useRoute, useLocation } from "wouter";
-import { Helmet } from "react-helmet-async";
-import { useApiRequest } from "@/hooks/use-api-cache";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import CommentSection from "@/components/CommentSection";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarAlt,
   faTag,
   faClock,
   faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
-import Newsletter from "@/components/sections/Newsletter";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { format } from "date-fns";
 import { marked } from "marked";
+import { useEffect } from "react";
+import { Helmet } from "react-helmet-async";
+import { useRoute, useLocation } from "wouter";
+
+import CommentSection from "@/components/CommentSection";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+import Newsletter from "@/components/sections/Newsletter";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useApiRequest } from "@/hooks/use-api-cache";
+
 
 interface Post {
   id: string;

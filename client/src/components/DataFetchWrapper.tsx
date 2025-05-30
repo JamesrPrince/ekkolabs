@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
 import { UseQueryResult } from '@tanstack/react-query';
+import { ReactNode } from 'react';
 
 interface DataFetchWrapperProps<TData, TError> {
   query: UseQueryResult<TData, TError>;

@@ -1,28 +1,3 @@
-import { useEffect, useState } from "react";
-import { useLocation } from "wouter";
-import { Helmet } from "react-helmet-async";
-import { format } from "date-fns";
-
-import {
-  useBlogPosts,
-  useBlogCategories,
-  useBlogTags,
-} from "@/hooks/use-blog-api";
-import { cn } from "@/lib/utils";
-
-import Navbar from "@/components/Navbar";
-import SocialLinks from "@/components/SocialLinks";
-import EmailLink from "@/components/EmailLink";
-import Footer from "@/components/Footer";
-import Newsletter from "@/components/sections/Newsletter";
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarAlt,
   faTag,
@@ -31,8 +6,30 @@ import {
   faTimes,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
+import { useLocation } from "wouter";
 
+import EmailLink from "@/components/EmailLink";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+import Newsletter from "@/components/sections/Newsletter";
+import SocialLinks from "@/components/SocialLinks";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  useBlogPosts,
+  useBlogCategories,
+  useBlogTags,
+} from "@/hooks/use-blog-api";
 import useIntersectionObserver from "@/hooks/use-intersection-observer";
+import { normalizePost } from "@/lib/blog-utils";
+import { cn } from "@/lib/utils";
 
 // Types for blog data
 interface Post {
@@ -86,22 +83,21 @@ interface Tag {
   };
 }
 
-interface APIResponse {
+// Unused interfaces should start with underscore
+interface _APIResponse {
   data: Post[];
-}
-
-interface CategoryResponse {
-  data: Category[];
-}
-
-interface TagResponse {
-  data: Tag[];
+  meta?: {
+    currentPage: number;
+    pageSize: number;
+    totalItems: number;
+    totalPages: number;
+  };
 }
 
 // Main Blog page component
 export default function BlogList() {
   const [, setLocation] = useLocation();
-  const { elementRef, isIntersecting } = useIntersectionObserver({
+  const { elementRef: _elementRef, isIntersecting } = useIntersectionObserver({
     triggerOnce: true,
   });
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -129,73 +125,47 @@ export default function BlogList() {
   const error = postsError;
 
   // Get unique categories for filter
-  const uniqueCategories = ["All", ...categories.map((cat) => cat.name)];
+  const uniqueCategories = [
+    "All",
+    ...(Array.isArray(categories)
+      ? categories.map((cat: Category) => cat.name)
+      : []),
+  ];
 
-  // Import the normalizePost function to properly handle all blog post fields
-  // and provide fallbacks for missing data
-  const normalizePost = (post: any) => {
-    if (!post) return null;
+  // Get featured post
+  const featuredPost = Array.isArray(blogPosts)
+    ? blogPosts.find((post: Post) => post.featured)
+    : undefined;
 
-    return {
-      ...post,
-      // Ensure required fields exist with defaults if missing
-      title: post.title || "Untitled Post",
-      excerpt: post.excerpt || "No excerpt available",
-      slug: post.slug || "untitled-post",
-      createdAt: post.createdAt || new Date().toISOString(),
-      updatedAt: post.updatedAt || post.createdAt || new Date().toISOString(),
-      published: typeof post.published === "boolean" ? post.published : true,
-
-      // Handle author data correctly
-      author: post.author
-        ? {
-            ...post.author,
-            name: post.author.name || "Anonymous",
-            // Use image field if available, otherwise use avatar
-            image: post.author.image || post.author.avatar || null,
-          }
-        : {
-            id: "anonymous",
-            name: "Anonymous",
-            image: null,
-          },
-
-      // Ensure category data is normalized
-      category: post.category || {
-        id: "uncategorized",
-        name: "Uncategorized",
-        slug: "uncategorized",
-      },
-
-      // Ensure tags is always an array
-      tags: Array.isArray(post.tags) ? post.tags : [],
-
-      // Calculate read time if not provided using content length
-      readTime: post.readTime || "2 min read",
-    };
-  };
-
-  // Normalize posts to handle missing fields and avatar/image inconsistencies
-  const normalizedPosts = blogPosts.map((post) => normalizePost(post));
-
-  // Get featured post (use the first post if none is featured)
-  const featuredPost =
-    normalizedPosts.find((post) => post.featured) || normalizedPosts[0];
+  // Process posts with the normalizePost function
+  const normalizedPosts = Array.isArray(blogPosts)
+    ? blogPosts.map((post: Post) => normalizePost(post))
+    : [];
 
   // Filter posts by category and search query
-  const filteredPosts = normalizedPosts
-    .filter((post) => featuredPost && post.id !== featuredPost.id) // Exclude featured post from the grid
-    .filter(
-      (post) =>
-        (selectedCategory === "All" ||
-          post.category?.name === selectedCategory) &&
-        (searchQuery === "" ||
-          post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ??
-            false)) &&
-        (activeTags.length === 0 ||
-          post.tags.some((tag) => activeTags.includes(tag.name)))
-    );
+  const filteredPosts = Array.isArray(normalizedPosts)
+    ? normalizedPosts
+        .filter((post: Post) => post && featuredPost && post.id !== featuredPost.id) // Exclude featured post from the grid
+        .filter((post: Post) => {
+          if (!post) return false;
+          return (
+            (selectedCategory === "All" ||
+              post.category?.name === selectedCategory) &&
+            (searchQuery === "" ||
+              post.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              false) &&
+            (activeTags.length === 0 ||
+              activeTags.some((tag) => {
+                if (!post || !post.tags || !Array.isArray(post.tags))
+                  return false;
+                return post.tags.some(
+                  (postTag) => postTag.name && postTag.name.includes(tag)
+                );
+              }))
+          );
+        })
+    : [];
 
   // Add scroll animations for elements with animate-in class
   useEffect(() => {
@@ -577,7 +547,7 @@ export default function BlogList() {
               {/* Tags Filter */}
               {tags.length > 0 && (
                 <div className="flex flex-wrap gap-2">
-                  {tags.slice(0, 5).map((tag) => (
+                  {tags.slice(0, 5).map((tag: Tag) => (
                     <Badge
                       key={tag.id}
                       variant={
@@ -616,7 +586,7 @@ export default function BlogList() {
             <div className="lg:col-span-2">
               {filteredPosts.length > 0 ? (
                 <div className="grid md:grid-cols-2 gap-8">
-                  {filteredPosts.map((post, index) => (
+                  {filteredPosts.map((post: Post, index: number) => (
                     <Card
                       key={post.id}
                       className={cn(
@@ -711,7 +681,7 @@ export default function BlogList() {
                 >
                   <h3 className="text-lg font-bold mb-4">Popular Topics</h3>
                   <div className="flex flex-wrap gap-2">
-                    {tags.map((tag) => (
+                    {tags.map((tag: Tag) => (
                       <Badge
                         key={tag.id}
                         variant={
@@ -739,7 +709,7 @@ export default function BlogList() {
               >
                 <h3 className="text-lg font-bold mb-4">Recent Posts</h3>
                 <div className="space-y-4">
-                  {blogPosts.slice(0, 3).map((post) => (
+                  {blogPosts.slice(0, 3).map((post: Post) => (
                     <div
                       key={post.id}
                       className="flex gap-3 items-start cursor-pointer"

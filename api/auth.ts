@@ -1,7 +1,8 @@
-import { prisma } from "../server/db";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import type { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
+
+import { prisma } from "../server/db";
 
 export interface UserPayload {
   id: string;

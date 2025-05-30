@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { SOCIAL_LINKS } from "@/lib/constants";
+
 import { profile } from "@/data/profile";
+import { SOCIAL_LINKS } from "@/lib/constants";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();

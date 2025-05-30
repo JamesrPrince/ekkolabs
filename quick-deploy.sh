@@ -15,13 +15,23 @@ echo -e "${BLUE}===========================================================${NC}
 echo -e "${BLUE}📦 Installing dependencies...${NC}"
 npm install
 
+# Fix TypeScript errors using our enhanced script
+echo -e "${BLUE}🔧 Fixing TypeScript errors...${NC}"
+chmod +x ./scripts/fix-typescript-errors-v2.sh
+./scripts/fix-typescript-errors-v2.sh
+
+# Fix Prisma compatibility issues
+echo -e "${BLUE}🔧 Fixing Prisma compatibility issues...${NC}"
+chmod +x ./scripts/fix-prisma-compatibility.sh
+./scripts/fix-prisma-compatibility.sh
+
 # Set up environment variables in .vercelenv
 echo -e "${BLUE}⚙️ Setting up environment variables...${NC}"
 cp .vercelenv .env
 
 # Deploy to Vercel directly with force option
 echo -e "${BLUE}🚀 Deploying to Vercel...${NC}"
-echo -e "${YELLOW}Note: This will bypass type checking for quick deployment${NC}"
+echo -e "${YELLOW}Note: Most TypeScript errors have been fixed automatically${NC}"
 vercel --prod
 
 # Show deployment URL

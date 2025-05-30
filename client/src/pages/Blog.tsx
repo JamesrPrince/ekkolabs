@@ -1,12 +1,3 @@
-import { useEffect, useState } from "react";
-import { useLocation } from "wouter";
-import Navbar from "@/components/Navbar";
-import SocialLinks from "@/components/SocialLinks";
-import EmailLink from "@/components/EmailLink";
-import Footer from "@/components/Footer";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarAlt,
   faTag,
@@ -15,22 +6,26 @@ import {
   faTimes,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
-import useIntersectionObserver from "@/hooks/use-intersection-observer";
-import { cn } from "@/lib/utils";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
+import { useLocation } from "wouter";
+
+import EmailLink from "@/components/EmailLink";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+// FeaturedPost component is unused in this file
 import Newsletter from "@/components/sections/Newsletter";
-import FeaturedPost from "@/components/sections/FeaturedPost";
+import SocialLinks from "@/components/SocialLinks";
+// Badge is not used in this component
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+
+// Hook and utility imports
 import { useApiRequest } from "@/hooks/use-api-cache";
 import useIntersectionObserver from "@/hooks/use-intersection-observer";
 import { cn } from "@/lib/utils";
-import Newsletter from "@/components/sections/Newsletter";
-import FeaturedPost from "@/components/sections/FeaturedPost";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useApiCache } from "@/hooks/use-api-cache";
 
 // Types for blog data
 interface Post {
@@ -65,7 +60,7 @@ interface Post {
   };
 }
 
-interface Category {
+interface _Category {
   id: string;
   name: string;
   slug: string;
@@ -74,7 +69,7 @@ interface Category {
   };
 }
 
-interface Tag {
+interface _Tag {
   id: string;
   name: string;
   slug: string;
@@ -86,7 +81,7 @@ interface Tag {
 // Main Blog page component
 export default function Blog() {
   const [, setLocation] = useLocation();
-  const { elementRef, isIntersecting } = useIntersectionObserver({
+  const { elementRef: _elementRef, isIntersecting } = useIntersectionObserver({
     triggerOnce: true,
   });
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -107,7 +102,18 @@ export default function Blog() {
   const categories = ["All", ...uniqueCategories];
 
   // Get featured post
-  const featuredPost = blogPosts?.find((post) => post.featured);
+  const _featuredPost = blogPosts?.find((post) => post.featured);
+
+  // Popular tags for filter and sidebar
+  const popularTags = [
+    "Web Dev",
+    "React",
+    "TypeScript",
+    "Design",
+    "AI",
+    "Blockchain",
+    "Mobile",
+  ];
 
   // Filter posts by category and search query
   const filteredPosts = blogPosts
@@ -197,7 +203,7 @@ export default function Blog() {
               style={{ animationDelay: "0.1s" }}
             >
               <h1 className="text-5xl md:text-6xl font-bold text-custom-secondary mb-4">
-                Ekko's Blog
+                Ekko&apos;s Blog
               </h1>
               <p className="text-lg md:text-xl text-custom-accent2 max-w-2xl mx-auto">
                 Thoughts on web development, tech, and life.
@@ -260,7 +266,7 @@ export default function Blog() {
 
                 {/* Tags Filter */}
                 <div className="flex flex-wrap gap-2">
-                  {popularTags.map((tag) => (
+                  {popularTags.map((tag: string) => (
                     <Button
                       key={tag}
                       variant="ghost"
@@ -373,7 +379,7 @@ export default function Blog() {
                     Popular Topics
                   </h3>
                   <div className="flex flex-wrap gap-2">
-                    {popularTags.map((tag) => (
+                    {popularTags.map((tag: string) => (
                       <Button
                         key={tag}
                         variant="ghost"
@@ -447,7 +453,7 @@ export default function Blog() {
                 Oops! Something went wrong.
               </h1>
               <p className="text-lg text-custom-accent2 mb-8">
-                We couldn't load the blog posts. Please try again later.
+                We couldn&apos;t load the blog posts. Please try again later.
               </p>
               <Button
                 variant="outline"

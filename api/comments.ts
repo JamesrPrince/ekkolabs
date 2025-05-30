@@ -1,6 +1,7 @@
-import { prisma } from "../server/db";
 import type { Request, Response } from "express";
+
 import { authenticate } from "./auth";
+import { prisma } from "../server/db";
 
 // Get comments for a specific post
 export const getCommentsForPost = async (req: Request, res: Response) => {

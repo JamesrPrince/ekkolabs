@@ -1,5 +1,7 @@
-import { prisma } from "../server/db";
 import { Request, Response } from "express";
+
+import { BlogPost, BlogCategory, BlogTag } from "./types";
+import { prisma } from "../server/db";
 
 // Get all blog posts
 export async function getPosts(req: Request, res: Response) {
@@ -14,7 +16,11 @@ export async function getPosts(req: Request, res: Response) {
     const skip = (page - 1) * limit;
 
     // Build where conditions
-    const where: any = { published: true };
+    const where: {
+      published: boolean;
+      category?: { slug: string };
+      tags?: { some: { slug: string } };
+    } = { published: true };
 
     if (categorySlug) {
       where.category = { slug: categorySlug };
@@ -50,10 +56,11 @@ export async function getPosts(req: Request, res: Response) {
       const words = post.content ? post.content.split(/\s+/).length : 0;
       const minutes = Math.max(1, Math.ceil(words / 225));
 
+      // Cast to BlogPost type for better type safety
       return {
         ...post,
         readTime: `${minutes} min read`,
-      };
+      } as BlogPost;
     });
 
     // Get total count for pagination
@@ -137,8 +144,10 @@ export async function createPost(req: Request, res: Response) {
         content,
         excerpt,
         published: published ?? false,
-        author: { connect: { id: authorId } },
-        category: categoryId ? { connect: { id: categoryId } } : undefined,
+        author: { connect: { id: String(authorId) } },
+        category: categoryId
+          ? { connect: { id: Number(categoryId) } }
+          : undefined,
         tags: tags
           ? {
               connectOrCreate: tags.map((tag: string) => ({

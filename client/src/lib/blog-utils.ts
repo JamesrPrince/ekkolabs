@@ -4,6 +4,41 @@
 
 import { readingTime } from "./utils";
 
+// Define Post interface to replace 'any' types
+export interface BlogPost {
+  id?: string;
+  title?: string;
+  excerpt?: string | null;
+  content?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  slug?: string;
+  published?: boolean;
+  author?: BlogAuthor | null;
+  category?: BlogCategory | null;
+  tags?: BlogTag[];
+  readTime?: string;
+}
+
+export interface BlogAuthor {
+  id?: string;
+  name?: string;
+  image?: string | null;
+  avatar?: string | null;
+}
+
+export interface BlogCategory {
+  id?: string | number;
+  name?: string;
+  slug?: string;
+}
+
+export interface BlogTag {
+  id?: string | number;
+  name?: string;
+  slug?: string;
+}
+
 /**
  * Normalizes a blog post by ensuring all required fields have values
  * and providing fallbacks for optional fields that might be missing
@@ -11,7 +46,7 @@ import { readingTime } from "./utils";
  * @param post The blog post to normalize
  * @returns Normalized blog post with all required fields
  */
-export function normalizePost(post: any) {
+export function normalizePost(post: BlogPost | null | undefined) {
   if (!post) return null;
 
   return {
@@ -50,7 +85,7 @@ export function normalizePost(post: any) {
 /**
  * Normalizes author data, ensuring avatar/image consistency
  */
-function normalizeAuthor(author: any) {
+function normalizeAuthor(author: BlogAuthor | null | undefined): BlogAuthor {
   if (!author) {
     return {
       id: "anonymous",
@@ -99,7 +134,7 @@ function extractExcerptFromContent(content: string): string | null {
 /**
  * Calculates estimated read time for an article
  */
-function calculateReadTime(content: string): string {
+export function calculateReadTime(content: string): string {
   if (!content) return "2 min read";
 
   // Use the existing readingTime function if available

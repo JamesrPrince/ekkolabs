@@ -3,9 +3,10 @@
  * @description Unit tests for the ErrorBoundary component
  */
 
-import React from "react";
 import { render, screen } from "@testing-library/react";
+import React from "react";
 import { describe, test, expect, beforeAll, afterAll, vi } from "vitest";
+
 import ErrorBoundary from "../components/ErrorBoundary";
 
 // Component that throws an error

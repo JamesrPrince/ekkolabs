@@ -1,21 +1,22 @@
-import { useEffect, useState } from "react";
-import Navbar from "@/components/Navbar";
-import SocialLinks from "@/components/SocialLinks";
-import EmailLink from "@/components/EmailLink";
-import Footer from "@/components/Footer";
-import AboutSection from "@/components/sections/About";
-import Skills from "@/components/sections/Skills";
-import Timeline from "@/components/sections/Timeline";
-import Education from "@/components/sections/Education";
-import { Button } from "@/components/ui/button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faDownload,
   faChevronDown,
   faChevronUp,
 } from "@fortawesome/free-solid-svg-icons";
-import { RESUME_URL } from "@/lib/constants";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
+
+import EmailLink from "@/components/EmailLink";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+import AboutSection from "@/components/sections/About";
+import Education from "@/components/sections/Education";
+import Skills from "@/components/sections/Skills";
+import Timeline from "@/components/sections/Timeline";
+import SocialLinks from "@/components/SocialLinks";
+import { Button } from "@/components/ui/button";
 import { profile } from "@/data/profile";
+import { RESUME_URL } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 // Define the tabs for the about page

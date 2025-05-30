@@ -1,16 +1,17 @@
+import { faUpload, faSave, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useLocation } from "wouter";
-import Navbar from "@/components/Navbar";
-import SocialLinks from "@/components/SocialLinks";
+
 import EmailLink from "@/components/EmailLink";
 import Footer from "@/components/Footer";
-import { Card } from "@/components/ui/card";
+import Navbar from "@/components/Navbar";
+import SocialLinks from "@/components/SocialLinks";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUpload, faSave, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function CreateArticlePage() {
   const [, setLocation] = useLocation();
