@@ -9,7 +9,7 @@ interface RequestOptions {
 
 // Blog post API hooks
 export function useBlogPosts(options: RequestOptions = {}) {
-  const response = useApiRequest("/api/blog/posts", {
+  const response = useApiRequest("/api/blog-posts-working", {
     ...options,
     cacheDuration: 60000, // 1 minute cache to prevent excessive requests
   });
@@ -26,14 +26,14 @@ export function useBlogPost(
   slug: string | null | undefined,
   options: RequestOptions = {}
 ) {
-  const url = slug ? `/api/blog/posts/${slug}` : null;
+  const url = slug ? `/api/blog-posts-working/${slug}` : null;
   return useApiRequest(url, options);
 }
 
 export function useBlogCategories(options: RequestOptions = {}) {
-  return useApiRequest("/api/blog/categories", options);
+  return useApiRequest("/api/blog-categories-working", options);
 }
 
 export function useBlogTags(options: RequestOptions = {}) {
-  return useApiRequest("/api/blog/tags", options);
+  return useApiRequest("/api/blog-tags-working", options);
 }
