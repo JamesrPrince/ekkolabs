@@ -9,7 +9,16 @@ interface RequestOptions {
 
 // Blog post API hooks
 export function useBlogPosts(options: RequestOptions = {}) {
-  const response = useApiRequest("/api/blog/posts", options);
+  const response = useApiRequest("/api/blog/posts", {
+    ...options,
+    cacheDuration: 60000, // 1 minute cache to prevent excessive requests
+  });
+
+  // Add logging for debugging purposes
+  if (response.error) {
+    console.error("Blog API Error:", response.error);
+  }
+
   return response;
 }
 

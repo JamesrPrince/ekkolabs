@@ -81,8 +81,8 @@ interface _Tag {
 // Main Blog page component
 export default function Blog() {
   const [, setLocation] = useLocation();
-  const { elementRef: _elementRef, isIntersecting } = useIntersectionObserver({
-    triggerOnce: true,
+  const { elementRef, isIntersecting } = useIntersectionObserver({
+    threshold: 0.1,
   });
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");

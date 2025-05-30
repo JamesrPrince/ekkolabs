@@ -105,8 +105,13 @@ function normalizeAuthor(author: BlogAuthor | null | undefined): BlogAuthor {
 /**
  * Extracts a short excerpt from content if none is provided
  */
-function extractExcerptFromContent(content: string): string | null {
-  if (!content) return null;
+export function extractExcerptFromContent(
+  content: string | undefined,
+  maxLength: number = 150
+): string {
+  if (!content) {
+    return "";
+  }
 
   // Strip markdown headings and formatting
   const plainText = content
@@ -120,14 +125,14 @@ function extractExcerptFromContent(content: string): string | null {
   // Get first paragraph or first 150 characters
   const firstParagraph = plainText.split("\n\n")[0];
   if (firstParagraph && firstParagraph.length > 20) {
-    return firstParagraph.length > 150
-      ? firstParagraph.substring(0, 147) + "..."
+    return firstParagraph.length > maxLength
+      ? firstParagraph.substring(0, maxLength - 3) + "..."
       : firstParagraph;
   }
 
   // Fallback to first 150 chars
-  return plainText.length > 150
-    ? plainText.substring(0, 147) + "..."
+  return plainText.length > maxLength
+    ? plainText.substring(0, maxLength - 3) + "..."
     : plainText;
 }
 
@@ -137,13 +142,22 @@ function extractExcerptFromContent(content: string): string | null {
 export function calculateReadTime(content: string): string {
   if (!content) return "2 min read";
 
-  // Use the existing readingTime function if available
   try {
-    return readingTime(content);
+    // Use the shared readingTime utility if available
+    if (typeof readingTime === "function") {
+      return readingTime(content);
+    }
   } catch (e) {
-    // Fallback calculation: average reading speed of 200-250 words per minute
-    const words = content.split(/\s+/).length;
-    const minutes = Math.ceil(words / 225);
+    console.error("Error using readingTime function:", e);
+  }
+
+  // Fallback calculation: average reading speed of 225 words per minute
+  try {
+    const words = content.trim().split(/\s+/).length;
+    const minutes = Math.max(1, Math.ceil(words / 225));
     return `${minutes} min read`;
+  } catch (e) {
+    console.error("Error calculating read time:", e);
+    return "2 min read";
   }
 }

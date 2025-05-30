@@ -52,15 +52,26 @@ export async function getPosts(req: Request, res: Response) {
 
     // Add readTime calculation for each post
     const postsWithReadTime = posts.map((post: any) => {
-      // Simple calculation: average reading speed of 225 words per minute
-      const words = post.content ? post.content.split(/\s+/).length : 0;
-      const minutes = Math.max(1, Math.ceil(words / 225));
+      try {
+        // Simple calculation: average reading speed of 225 words per minute
+        const words = post.content
+          ? post.content.trim().split(/\s+/).length
+          : 0;
+        const minutes = Math.max(1, Math.ceil(words / 225));
 
-      // Cast to BlogPost type for better type safety
-      return {
-        ...post,
-        readTime: `${minutes} min read`,
-      } as BlogPost;
+        // Cast to BlogPost type for better type safety
+        return {
+          ...post,
+          readTime: `${minutes} min read`,
+        } as BlogPost;
+      } catch (err) {
+        console.error("Error calculating read time for post:", post.title, err);
+        // Return post with default read time
+        return {
+          ...post,
+          readTime: "2 min read",
+        } as BlogPost;
+      }
     });
 
     // Get total count for pagination

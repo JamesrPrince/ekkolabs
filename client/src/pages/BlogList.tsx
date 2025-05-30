@@ -8,7 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "wouter";
 
@@ -33,36 +33,20 @@ import { cn } from "@/lib/utils";
 
 // Types for blog data
 interface Post {
-  id: string;
+  id?: string;
   title: string;
   excerpt: string;
-  content: string;
+  slug: string;
   createdAt: string;
   updatedAt: string;
-  slug: string;
   published: boolean;
-  featured?: boolean; // Made optional since it might not exist in the API response
-  coverImage?: string;
-  readTime?: string;
-  authorId: string;
-  categoryId: string | number; // Accept both string and number for categoryId
-  category: {
-    id: string | number;
-    name: string;
-    slug: string;
-  };
-  tags: {
-    id: string | number;
-    name: string;
-    slug: string;
-  }[];
-  author: {
-    id: string;
-    name: string;
-    username?: string;
-    image?: string;
-    avatar?: string; // Added for compatibility with database
-  };
+  author: BlogAuthor;
+  category: BlogCategory;
+  tags: BlogTag[];
+  readTime: string;
+  content?: string;
+  featured?: boolean; // Added featured property
+  coverImage?: string; // Added coverImage property
 }
 
 interface Category {
@@ -117,9 +101,12 @@ export default function BlogList() {
   // Fetch tags
   const { data: tagsResponse } = useBlogTags();
 
-  const blogPosts = postsResponse?.data || [];
-  const categories = categoriesResponse?.data || [];
-  const tags = tagsResponse?.data || [];
+  const blogPosts = useMemo(() => postsResponse?.data || [], [postsResponse]);
+  const categories = useMemo(
+    () => categoriesResponse?.data || [],
+    [categoriesResponse]
+  );
+  const tags = useMemo(() => tagsResponse?.data || [], [tagsResponse]);
 
   const isLoading = isLoadingPosts;
   const error = postsError;
@@ -132,40 +119,95 @@ export default function BlogList() {
       : []),
   ];
 
-  // Get featured post
-  const featuredPost = Array.isArray(blogPosts)
-    ? blogPosts.find((post: Post) => post.featured)
-    : undefined;
+  // Ensure normalizedPosts is defined before featuredPost and regularPosts
+  const normalizedPosts = useMemo(() => {
+    if (!blogPosts || !Array.isArray(blogPosts)) return [];
+    try {
+      return blogPosts
+        .map((post) => {
+          // First try to use the standard normalizePost function
+          try {
+            return normalizePost(post);
+          } catch (error) {
+            console.error(
+              "Error normalizing post with standard function:",
+              error
+            );
 
-  // Process posts with the normalizePost function
-  const normalizedPosts = Array.isArray(blogPosts)
-    ? blogPosts.map((post: Post) => normalizePost(post))
-    : [];
+            // Fallback to manual normalization if the standard function fails
+            return {
+              ...post,
+              title: post.title || "Untitled Post",
+              excerpt: post.excerpt || "No excerpt available",
+              slug: post.slug || "untitled-post",
+              createdAt: post.createdAt || new Date().toISOString(),
+              updatedAt:
+                post.updatedAt || post.createdAt || new Date().toISOString(),
+              published:
+                typeof post.published === "boolean" ? post.published : true,
+              author: post.author || { name: "Anonymous" },
+              category: post.category || {
+                name: "Uncategorized",
+                slug: "uncategorized",
+              },
+              tags: Array.isArray(post.tags) ? post.tags : [],
+              readTime:
+                post.readTime ||
+                (post.content
+                  ? `${Math.max(1, Math.ceil(post.content.trim().split(/\s+/).length / 225))} min read`
+                  : "2 min read"),
+            };
+          }
+        })
+        .filter(Boolean) as Post[];
+    } catch (error) {
+      console.error("Error processing blog posts:", error);
+      return [];
+    }
+  }, [blogPosts]);
+
+  const featuredPost = useMemo(() => {
+    if (!normalizedPosts.length) return null;
+    // Prefer a post explicitly marked as featured, otherwise fallback to the first post.
+    return normalizedPosts.find((post) => post.featured) || normalizedPosts[0];
+  }, [normalizedPosts]);
+
+  const regularPosts = useMemo(() => {
+    if (!normalizedPosts.length) return [];
+    if (!featuredPost) {
+      // If no featured post is found (e.g., all posts have featured: false or normalizedPosts is empty)
+      // return all posts that are not marked as featured.
+      return normalizedPosts.filter((post) => !post.featured);
+    }
+    // Filter out the specific featuredPost and any other posts that might be marked as featured.
+    return normalizedPosts.filter(
+      (post) => post.id !== featuredPost.id && !post.featured
+    );
+  }, [normalizedPosts, featuredPost]);
 
   // Filter posts by category and search query
-  const filteredPosts = Array.isArray(normalizedPosts)
-    ? normalizedPosts
-        .filter((post: Post) => post && featuredPost && post.id !== featuredPost.id) // Exclude featured post from the grid
-        .filter((post: Post) => {
-          if (!post) return false;
-          return (
-            (selectedCategory === "All" ||
-              post.category?.name === selectedCategory) &&
-            (searchQuery === "" ||
-              post.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              false) &&
-            (activeTags.length === 0 ||
-              activeTags.some((tag) => {
-                if (!post || !post.tags || !Array.isArray(post.tags))
-                  return false;
-                return post.tags.some(
-                  (postTag) => postTag.name && postTag.name.includes(tag)
-                );
-              }))
-          );
-        })
-    : [];
+  const filteredPosts = useMemo(() => {
+    if (!regularPosts) return [];
+    return regularPosts.filter((post: Post) => {
+      if (!post) return false;
+      const matchesCategory =
+        selectedCategory !== "All" // Corrected variable name
+          ? post.category && post.category.name === selectedCategory // Compare by name if selectedCategory is a string
+          : true;
+      const matchesTags = activeTags.length
+        ? post.tags &&
+          post.tags.some((tag: Tag) => activeTags.includes(tag.name))
+        : true;
+      const matchesSearch = searchQuery
+        ? post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (post.excerpt &&
+            post.excerpt.toLowerCase().includes(searchQuery.toLowerCase())) ||
+          (post.content &&
+            post.content.toLowerCase().includes(searchQuery.toLowerCase()))
+        : true;
+      return matchesCategory && matchesTags && matchesSearch;
+    });
+  }, [regularPosts, selectedCategory, activeTags, searchQuery]); // Added searchQuery to dependencies
 
   // Add scroll animations for elements with animate-in class
   useEffect(() => {
@@ -362,8 +404,10 @@ export default function BlogList() {
     );
   }
 
-  // If there's an error, show an error message
+  // If there's an error, show an error message with more details and recovery options
   if (error) {
+    console.error("BlogList Error:", error);
+
     return (
       <>
         <Helmet>
@@ -380,15 +424,30 @@ export default function BlogList() {
               <h1 className="text-3xl md:text-4xl font-bold mb-4">
                 Oops! Something went wrong.
               </h1>
-              <p className="text-lg text-muted-foreground mb-8">
+              <p className="text-lg text-muted-foreground mb-4">
                 We couldn&apos;t load the blog posts. Please try again later.
               </p>
-              <Button
-                variant="outline"
-                onClick={() => window.location.reload()}
-              >
-                Retry
-              </Button>
+              <p className="text-sm text-muted-foreground bg-red-50 p-2 rounded mb-8 max-w-lg mx-auto">
+                Error: {error.message || "Unknown error loading blog posts"}
+              </p>
+              <div className="flex flex-wrap gap-4 justify-center">
+                <Button
+                  variant="outline"
+                  onClick={() => window.location.reload()}
+                >
+                  Retry
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    // Clear cache and reload
+                    localStorage.removeItem("api-cache:/api/blog/posts");
+                    window.location.reload();
+                  }}
+                >
+                  Clear Cache & Retry
+                </Button>
+              </div>
             </div>
           </div>
         </main>
@@ -545,8 +604,8 @@ export default function BlogList() {
               </div>
 
               {/* Tags Filter */}
-              {tags.length > 0 && (
-                <div className="flex flex-wrap gap-2">
+              {Array.isArray(tags) && tags.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-2">
                   {tags.slice(0, 5).map((tag: Tag) => (
                     <Badge
                       key={tag.id}
@@ -674,7 +733,7 @@ export default function BlogList() {
               <Newsletter />
 
               {/* Popular tags */}
-              {tags.length > 0 && (
+              {Array.isArray(tags) && tags.length > 0 && (
                 <Card
                   className="p-6 animate-in"
                   style={{ animationDelay: "0.5s" }}
@@ -709,37 +768,38 @@ export default function BlogList() {
               >
                 <h3 className="text-lg font-bold mb-4">Recent Posts</h3>
                 <div className="space-y-4">
-                  {blogPosts.slice(0, 3).map((post: Post) => (
-                    <div
-                      key={post.id}
-                      className="flex gap-3 items-start cursor-pointer"
-                      onClick={() => navigateToPost(post.slug)}
-                    >
-                      <div className="w-16 h-16 flex-shrink-0 overflow-hidden rounded bg-muted">
-                        {post.coverImage ? (
-                          <img
-                            src={post.coverImage}
-                            alt={post.title}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <p className="text-xs text-muted-foreground">
-                              No image
-                            </p>
+                  {Array.isArray(blogPosts) &&
+                    blogPosts.slice(0, 3).map((post: Post) => (
+                      <div
+                        key={post.id}
+                        className="flex gap-3 items-start cursor-pointer"
+                        onClick={() => navigateToPost(post.slug)}
+                      >
+                        <div className="w-16 h-16 flex-shrink-0 overflow-hidden rounded bg-muted">
+                          {post.coverImage ? (
+                            <img
+                              src={post.coverImage}
+                              alt={post.title}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <p className="text-xs text-muted-foreground">
+                                No image
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-sm line-clamp-2 hover:text-primary transition-colors">
+                            {post.title}
+                          </h4>
+                          <div className="text-muted-foreground text-xs mt-1">
+                            {formatDate(post.createdAt)}
                           </div>
-                        )}
-                      </div>
-                      <div>
-                        <h4 className="font-medium text-sm line-clamp-2 hover:text-primary transition-colors">
-                          {post.title}
-                        </h4>
-                        <div className="text-muted-foreground text-xs mt-1">
-                          {formatDate(post.createdAt)}
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </Card>
             </div>
