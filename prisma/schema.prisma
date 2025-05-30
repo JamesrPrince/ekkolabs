@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../node_modules/.prisma/client"
@@ -15,18 +9,18 @@ datasource db {
 }
 
 model User {
-  id       String   @id @default(uuid()) 
-  username String?  @unique
-  password String
-  name     String
-  email    String   @unique
-  bio      String?
-  image    String?  @map("avatar") // Keep the field name for database compatibility
-  role     String   @default("USER") // Possible values: USER, ADMIN
-  posts    Post[]
-  comments Comment[]
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id        String    @id @default(uuid())
+  username  String?   @unique
+  password  String
+  name      String
+  email     String    @unique
+  bio       String?
+  image     String?   @map("avatar")
+  role      String    @default("USER")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  comments  Comment[]
+  posts     Post[]
 
   @@map("users")
 }
@@ -43,33 +37,33 @@ model ContactMessages {
 }
 
 model Post {
-  id        String   @id @default(uuid())
-  slug      String   @unique
-  title     String
-  excerpt   String?
-  content   String
-  published Boolean  @default(false)
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  String   @map("author_id")
-  category  Category? @relation(fields: [categoryId], references: [id])
-  categoryId Int?     @map("category_id")
-  tags      Tag[]
-  comments  Comment[]
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  
+  id         String    @id @default(uuid())
+  slug       String    @unique
+  title      String
+  excerpt    String?
+  content    String
+  published  Boolean   @default(false)
+  authorId   String    @map("author_id")
+  categoryId Int?      @map("category_id")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  comments   Comment[]
+  category   Category? @relation(fields: [categoryId], references: [id])
+  author     User      @relation(fields: [authorId], references: [id])
+  tags       Tag[]     @relation("PostToTag")
+
   @@map("posts")
 }
 
 model Category {
-  id          Int     @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   name        String
-  slug        String  @unique
+  slug        String   @unique
   description String?
-  posts       Post[]
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
-  
+  posts       Post[]
+
   @@map("categories")
 }
 
@@ -77,26 +71,25 @@ model Tag {
   id        Int      @id @default(autoincrement())
   name      String   @unique
   slug      String   @unique
-  posts     Post[]
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  
+  posts     Post[]   @relation("PostToTag")
+
   @@map("tags")
 }
 
-// New Comment model for blog post comments
 model Comment {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   content   String
-  authorId  String?  @map("author_id")
-  author    User?    @relation(fields: [authorId], references: [id])
-  postId    String   @map("post_id")
-  post      Post     @relation(fields: [postId], references: [id])
-  parentId  Int?     @map("parent_id") // For nested comments/replies
-  parent    Comment? @relation("CommentReplies", fields: [parentId], references: [id])
+  authorId  String?   @map("author_id")
+  postId    String    @map("post_id")
+  parentId  Int?      @map("parent_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
   replies   Comment[] @relation("CommentReplies")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  
+  post      Post      @relation(fields: [postId], references: [id])
+  author    User?     @relation(fields: [authorId], references: [id])
+
   @@map("comments")
 }

@@ -133,7 +133,7 @@ export default function BlogList() {
     if (!blogPosts || !Array.isArray(blogPosts)) return [];
     try {
       return blogPosts
-        .map((post) => {
+        .map((post: Post) => {
           try {
             return normalizePost(post);
           } catch (error) {
@@ -177,7 +177,7 @@ export default function BlogList() {
   const regularPosts = useMemo(() => {
     if (!normalizedPosts.length) return [];
     if (!featuredPost) {
-      return normalizedPosts.filter((post) => !post.featured);
+      return normalizedPosts.filter((post: Post) => !post.featured);
     }
     return normalizedPosts.filter(
       (post) => post.id !== featuredPost.id && !post.featured

@@ -1,5 +1,7 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
-import { prisma } from "../../server/db";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
