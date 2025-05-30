@@ -171,9 +171,7 @@ export default function BlogList() {
       tags: Array.isArray(post.tags) ? post.tags : [],
 
       // Calculate read time if not provided using content length
-      readTime:
-        post.readTime ||
-        (post.content ? calculateReadTime(post.content) : "2 min read"),
+      readTime: post.readTime || "2 min read",
     };
   };
 
