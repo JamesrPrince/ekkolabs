@@ -1,20 +1,21 @@
 import { PrismaClient } from "@prisma/client";
-import { withAccelerate } from "@prisma/extension-accelerate";
+// import { withAccelerate } from "@prisma/extension-accelerate";
 
 // Initialize Prisma Client
 // The connection URL is loaded from the DATABASE_URL environment variable
-const prismaBase = new PrismaClient({
+const prisma = new PrismaClient({
   log:
     process.env.NODE_ENV === "development"
       ? ["query", "error", "warn"]
       : ["error"],
 });
 
+// Temporarily disable Accelerate to fix TypeScript issues
 // Use Prisma Accelerate conditionally based on connection URL
 // Only use it when DATABASE_URL starts with prisma+postgres://
-const prisma = process.env.DATABASE_URL?.startsWith("prisma+postgres://")
-  ? prismaBase.$extends(withAccelerate())
-  : prismaBase;
+// const prisma = process.env.DATABASE_URL?.startsWith("prisma+postgres://")
+//   ? prismaBase.$extends(withAccelerate())
+//   : prismaBase;
 
 export { prisma };
 

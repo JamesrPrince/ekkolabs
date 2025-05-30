@@ -186,15 +186,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     async (req, res) => {
       try {
         const { slug } = req.params;
-        const {
-          title,
-          content,
-          excerpt,
-          published,
-          categoryId,
-          tags,
-          coverImage,
-        } = req.body;
+        const { title, content, excerpt, published, categoryId, tags } =
+          req.body;
 
         // Ensure the post exists
         const existingPost = await prisma.post.findUnique({
@@ -213,7 +206,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
             content,
             excerpt,
             published,
-            coverImage,
             updatedAt: new Date(),
             categoryId,
             tags: {

@@ -6,8 +6,8 @@ import { prisma } from "./db";
 export interface UserInput {
   username: string;
   password: string;
-  name?: string;
-  email?: string;
+  name: string;
+  email: string;
 }
 
 export interface ContactMessageInput {
@@ -29,7 +29,7 @@ export interface IStorage {
 export class DatabaseStorage implements IStorage {
   async getUser(id: number): Promise<User | null> {
     return await prisma.user.findUnique({
-      where: { id },
+      where: { id: String(id) },
     });
   }
 

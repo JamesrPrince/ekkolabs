@@ -32,6 +32,26 @@ import { normalizePost } from "@/lib/blog-utils";
 import { cn } from "@/lib/utils";
 
 // Types for blog data
+interface BlogAuthor {
+  id?: string;
+  name: string;
+  image?: string | null;
+  username?: string;
+}
+
+interface BlogCategory {
+  id: number;
+  name: string;
+  slug: string;
+  description?: string;
+}
+
+interface BlogTag {
+  id: number;
+  name: string;
+  slug: string;
+}
+
 interface Post {
   id?: string;
   title: string;
@@ -45,8 +65,8 @@ interface Post {
   tags: BlogTag[];
   readTime: string;
   content?: string;
-  featured?: boolean; // Added featured property
-  coverImage?: string; // Added coverImage property
+  featured?: boolean;
+  coverImage?: string;
 }
 
 interface Category {
@@ -64,17 +84,6 @@ interface Tag {
   slug: string;
   _count: {
     posts: number;
-  };
-}
-
-// Unused interfaces should start with underscore
-interface _APIResponse {
-  data: Post[];
-  meta?: {
-    currentPage: number;
-    pageSize: number;
-    totalItems: number;
-    totalPages: number;
   };
 }
 
@@ -125,16 +134,10 @@ export default function BlogList() {
     try {
       return blogPosts
         .map((post) => {
-          // First try to use the standard normalizePost function
           try {
             return normalizePost(post);
           } catch (error) {
-            console.error(
-              "Error normalizing post with standard function:",
-              error
-            );
-
-            // Fallback to manual normalization if the standard function fails
+            console.error("Error normalizing post:", error);
             return {
               ...post,
               title: post.title || "Untitled Post",
@@ -168,18 +171,14 @@ export default function BlogList() {
 
   const featuredPost = useMemo(() => {
     if (!normalizedPosts.length) return null;
-    // Prefer a post explicitly marked as featured, otherwise fallback to the first post.
     return normalizedPosts.find((post) => post.featured) || normalizedPosts[0];
   }, [normalizedPosts]);
 
   const regularPosts = useMemo(() => {
     if (!normalizedPosts.length) return [];
     if (!featuredPost) {
-      // If no featured post is found (e.g., all posts have featured: false or normalizedPosts is empty)
-      // return all posts that are not marked as featured.
       return normalizedPosts.filter((post) => !post.featured);
     }
-    // Filter out the specific featuredPost and any other posts that might be marked as featured.
     return normalizedPosts.filter(
       (post) => post.id !== featuredPost.id && !post.featured
     );
@@ -191,12 +190,12 @@ export default function BlogList() {
     return regularPosts.filter((post: Post) => {
       if (!post) return false;
       const matchesCategory =
-        selectedCategory !== "All" // Corrected variable name
-          ? post.category && post.category.name === selectedCategory // Compare by name if selectedCategory is a string
+        selectedCategory !== "All"
+          ? post.category && post.category.name === selectedCategory
           : true;
       const matchesTags = activeTags.length
         ? post.tags &&
-          post.tags.some((tag: Tag) => activeTags.includes(tag.name))
+          post.tags.some((tag: BlogTag) => activeTags.includes(tag.name))
         : true;
       const matchesSearch = searchQuery
         ? post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -207,7 +206,7 @@ export default function BlogList() {
         : true;
       return matchesCategory && matchesTags && matchesSearch;
     });
-  }, [regularPosts, selectedCategory, activeTags, searchQuery]); // Added searchQuery to dependencies
+  }, [regularPosts, selectedCategory, activeTags, searchQuery]);
 
   // Add scroll animations for elements with animate-in class
   useEffect(() => {
@@ -226,13 +225,8 @@ export default function BlogList() {
       });
     };
 
-    // Check on initial load in case some elements are already in view
     handleScroll();
-
-    // Add scroll event listener
     window.addEventListener("scroll", handleScroll);
-
-    // Clean up
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -280,7 +274,6 @@ export default function BlogList() {
 
         <main className="pt-20 bg-background">
           <div className="container mx-auto px-4 py-16 md:px-8 lg:px-16 xl:px-24">
-            {/* Header Section */}
             <div className="text-center mb-16">
               <h1 className="text-5xl md:text-6xl font-bold mb-4">Blog</h1>
               <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -296,7 +289,6 @@ export default function BlogList() {
               </Button>
             </div>
 
-            {/* Featured Post Skeleton */}
             <Card className="mb-12">
               <div className="flex flex-col md:flex-row">
                 <div className="md:w-1/2">
@@ -316,19 +308,16 @@ export default function BlogList() {
               </div>
             </Card>
 
-            {/* Search and Filter Section */}
             <div className="mb-12">
               <div className="relative mb-4">
                 <Skeleton className="h-10 w-full" />
               </div>
-
               <div className="flex flex-wrap gap-4">
                 <div className="flex flex-wrap gap-2">
                   {[1, 2, 3, 4].map((i) => (
                     <Skeleton key={i} className="h-8 w-16" />
                   ))}
                 </div>
-
                 <div className="flex flex-wrap gap-2">
                   {[1, 2, 3, 4, 5].map((i) => (
                     <Skeleton key={i} className="h-6 w-12" />
@@ -337,7 +326,6 @@ export default function BlogList() {
               </div>
             </div>
 
-            {/* Blog Posts Grid */}
             <div className="grid lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2">
                 <div className="grid md:grid-cols-2 gap-8">
@@ -362,7 +350,6 @@ export default function BlogList() {
                 </div>
               </div>
 
-              {/* Sidebar */}
               <div className="space-y-8">
                 <Card className="p-6 space-y-4">
                   <Skeleton className="h-6 w-32" />
@@ -370,7 +357,6 @@ export default function BlogList() {
                   <Skeleton className="h-4 w-5/6" />
                   <Skeleton className="h-8 w-full" />
                 </Card>
-
                 <Card className="p-6 space-y-4">
                   <Skeleton className="h-6 w-32" />
                   <div className="flex flex-wrap gap-2">
@@ -379,7 +365,6 @@ export default function BlogList() {
                     ))}
                   </div>
                 </Card>
-
                 <Card className="p-6 space-y-4">
                   <Skeleton className="h-6 w-32" />
                   <div className="space-y-4">
@@ -404,7 +389,7 @@ export default function BlogList() {
     );
   }
 
-  // If there's an error, show an error message with more details and recovery options
+  // If there's an error, show an error message
   if (error) {
     console.error("BlogList Error:", error);
 
@@ -440,7 +425,6 @@ export default function BlogList() {
                 <Button
                   variant="secondary"
                   onClick={() => {
-                    // Clear cache and reload
                     localStorage.removeItem("api-cache:/api/blog/posts");
                     window.location.reload();
                   }}
@@ -473,7 +457,6 @@ export default function BlogList() {
 
       <main className="pt-20 bg-background">
         <div className="container mx-auto px-4 py-16 md:px-8 lg:px-16 xl:px-24">
-          {/* Header Section */}
           <div
             className="text-center mb-16 animate-in show"
             style={{ animationDelay: "0.1s" }}
@@ -493,7 +476,6 @@ export default function BlogList() {
             </Button>
           </div>
 
-          {/* Featured Post Section */}
           {featuredPost && (
             <Card
               className="mb-12 overflow-hidden animate-in show border shadow-md"
@@ -562,12 +544,10 @@ export default function BlogList() {
             </Card>
           )}
 
-          {/* Search and Filter Section */}
           <div
             className="mb-12 animate-in show"
             style={{ animationDelay: "0.3s" }}
           >
-            {/* Search Bar */}
             <div className="relative mb-4">
               <Input
                 type="text"
@@ -585,9 +565,7 @@ export default function BlogList() {
               </button>
             </div>
 
-            {/* Filter by Category and Tags */}
             <div className="flex flex-wrap gap-4">
-              {/* Category Filter */}
               <div className="flex flex-wrap gap-2">
                 {uniqueCategories.map((category) => (
                   <Button
@@ -603,7 +581,6 @@ export default function BlogList() {
                 ))}
               </div>
 
-              {/* Tags Filter */}
               {Array.isArray(tags) && tags.length > 0 && (
                 <div className="mt-4 flex flex-wrap gap-2">
                   {tags.slice(0, 5).map((tag: Tag) => (
@@ -622,7 +599,6 @@ export default function BlogList() {
                 </div>
               )}
 
-              {/* Clear filters button */}
               {(selectedCategory !== "All" ||
                 searchQuery ||
                 activeTags.length > 0) && (
@@ -639,9 +615,7 @@ export default function BlogList() {
             </div>
           </div>
 
-          {/* Blog Posts Grid */}
           <div className="grid lg:grid-cols-3 gap-8">
-            {/* Main Posts Section */}
             <div className="lg:col-span-2">
               {filteredPosts.length > 0 ? (
                 <div className="grid md:grid-cols-2 gap-8">
@@ -727,12 +701,9 @@ export default function BlogList() {
               )}
             </div>
 
-            {/* Sidebar */}
             <div className="space-y-8">
-              {/* Newsletter subscription */}
               <Newsletter />
 
-              {/* Popular tags */}
               {Array.isArray(tags) && tags.length > 0 && (
                 <Card
                   className="p-6 animate-in"
@@ -761,7 +732,6 @@ export default function BlogList() {
                 </Card>
               )}
 
-              {/* Recent posts - simplified version */}
               <Card
                 className="p-6 animate-in"
                 style={{ animationDelay: "0.6s" }}
