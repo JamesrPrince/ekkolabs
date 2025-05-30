@@ -1,6 +1,6 @@
 /**
- * @file API Cache Hook Tests
- * @description Unit tests for the useApiCache hook
+ * @file API Request Hook Tests
+ * @description Unit tests for the useApiRequest hook
  */
 
 import { renderHook } from "@testing-library/react";
@@ -14,7 +14,7 @@ vi.mock("../lib/queryClient", () => ({
   apiRequest: vi.fn(),
 }));
 
-describe("useApiCache Hook", () => {
+describe("useApiRequest Hook", () => {
   const mockResponse = {
     json: vi.fn().mockResolvedValue({ data: "test data" }),
   };

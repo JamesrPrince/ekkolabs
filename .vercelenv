@@ -1,6 +1,12 @@
-# Dummy DATABASE_URL for build-time only
+# Build-time only environment variables for Vercel
+# This file is used during the build process on Vercel
+# For runtime, set environment variables in the Vercel dashboard
 
-# This won't be used in production, you must set DATABASE_URL in Vercel environment variables
+# Placeholder DATABASE_URL (not used at runtime)
+DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
 
-DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
-NODE_ENV=development
+# Build environment
+NODE_ENV=production 
+
+# Indicate this is a build environment
+IS_VERCEL_BUILD=true

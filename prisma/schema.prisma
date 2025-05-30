@@ -15,14 +15,16 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  username String  @unique
+  id       String   @id @default(uuid()) 
+  username String?  @unique
   password String
-  name     String?
-  email    String? @unique
+  name     String
+  email    String   @unique
   bio      String?
-  avatar   String?
+  image    String?  @map("avatar") // Keep the field name for database compatibility
+  role     String   @default("USER") // Possible values: USER, ADMIN
   posts    Post[]
+  comments Comment[]
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -48,10 +50,11 @@ model Post {
   content   String
   published Boolean  @default(false)
   author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int      @map("author_id")
+  authorId  String   @map("author_id")
   category  Category? @relation(fields: [categoryId], references: [id])
   categoryId Int?     @map("category_id")
   tags      Tag[]
+  comments  Comment[]
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   
@@ -79,4 +82,21 @@ model Tag {
   updatedAt DateTime @updatedAt @map("updated_at")
   
   @@map("tags")
+}
+
+// New Comment model for blog post comments
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  authorId  String?  @map("author_id")
+  author    User?    @relation(fields: [authorId], references: [id])
+  postId    String   @map("post_id")
+  post      Post     @relation(fields: [postId], references: [id])
+  parentId  Int?     @map("parent_id") // For nested comments/replies
+  parent    Comment? @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[] @relation("CommentReplies")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  
+  @@map("comments")
 }

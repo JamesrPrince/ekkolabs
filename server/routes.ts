@@ -10,6 +10,27 @@ import type { SendMailOptions, SentMessageInfo } from "nodemailer";
 import { prisma } from "./db";
 import { storage } from "./storage";
 import { getPosts, getPostBySlug, createPost } from "../api/blog";
+import {
+  login,
+  register,
+  getProfile,
+  updateProfile,
+  changePassword,
+  authenticate,
+  authorizeAdmin,
+} from "../api/auth";
+import {
+  getCommentsForPost,
+  addComment,
+  updateComment,
+  deleteComment,
+} from "../api/comments";
+import {
+  getCommentsForPost,
+  addComment,
+  updateComment,
+  deleteComment,
+} from "../api/comments";
 
 // Email transporter based on environment
 const getEmailTransporter = async () => {
@@ -148,6 +169,122 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ error: "Failed to fetch tags" });
     }
   });
+
+  // Authentication routes
+  app.post("/api/auth/login", login);
+  app.post("/api/auth/register", register);
+  app.get("/api/auth/profile", authenticate, getProfile);
+  app.put("/api/auth/profile", authenticate, updateProfile);
+  app.post("/api/auth/change-password", authenticate, changePassword);
+
+  // Comment routes
+  app.get("/api/blog/posts/:postId/comments", getCommentsForPost);
+  app.post("/api/blog/posts/:postId/comments", authenticate, addComment);
+  app.put("/api/blog/comments/:commentId", authenticate, updateComment);
+  app.delete("/api/blog/comments/:commentId", authenticate, deleteComment);
+
+  // Protected blog post management routes
+  app.post("/api/blog/posts", authenticate, authorizeAdmin, createPost);
+  app.put(
+    "/api/blog/posts/:slug",
+    authenticate,
+    authorizeAdmin,
+    async (req, res) => {
+      try {
+        const { slug } = req.params;
+        const {
+          title,
+          content,
+          excerpt,
+          published,
+          categoryId,
+          tags,
+          coverImage,
+        } = req.body;
+
+        // Ensure the post exists
+        const existingPost = await prisma.post.findUnique({
+          where: { slug },
+        });
+
+        if (!existingPost) {
+          return res.status(404).json({ error: "Post not found" });
+        }
+
+        // Update the post
+        const updatedPost = await prisma.post.update({
+          where: { slug },
+          data: {
+            title,
+            content,
+            excerpt,
+            published,
+            coverImage,
+            updatedAt: new Date(),
+            categoryId,
+            tags: {
+              // Disconnect all existing tags and connect the new ones
+              set: [],
+              connect: tags?.map((tagId: string) => ({ id: tagId })) || [],
+            },
+          },
+          include: {
+            category: true,
+            tags: true,
+            author: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+              },
+            },
+          },
+        });
+
+        res.status(200).json({ data: updatedPost });
+      } catch (error) {
+        console.error("Error updating post:", error);
+        res.status(500).json({ error: "Failed to update post" });
+      }
+    }
+  );
+
+  app.delete(
+    "/api/blog/posts/:slug",
+    authenticate,
+    authorizeAdmin,
+    async (req, res) => {
+      try {
+        const { slug } = req.params;
+
+        // Ensure the post exists
+        const existingPost = await prisma.post.findUnique({
+          where: { slug },
+        });
+
+        if (!existingPost) {
+          return res.status(404).json({ error: "Post not found" });
+        }
+
+        // Delete the post
+        await prisma.post.delete({
+          where: { slug },
+        });
+
+        res.status(200).json({ success: true });
+      } catch (error) {
+        console.error("Error deleting post:", error);
+        res.status(500).json({ error: "Failed to delete post" });
+      }
+    }
+  );
+
+  // Comments API routes
+  app.get("/api/comments/:postId", getCommentsForPost);
+  app.post("/api/comments", addComment);
+  app.put("/api/comments/:id", updateComment);
+  app.delete("/api/comments/:id", deleteComment);
 
   // Create HTTP server for the Express app
   return createServer(app);

@@ -1,7 +1,8 @@
 import { useState, useEffect, Suspense, lazy } from "react";
 import { Switch, Route } from "wouter";
+import { HelmetProvider } from "react-helmet-async";
 
-// Impor t our enhanced Analytics components
+// Import our enhanced Analytics components
 import { Analytics, PageViewTracker } from "./lib/analytics";
 
 import { queryClient } from "./lib/queryClient";
@@ -11,6 +12,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 // Lazy load page components
 const NotFound = lazy(() => import("@/pages/not-found"));
@@ -18,7 +20,12 @@ const Home = lazy(() => import("@/pages/Home"));
 const ProjectsPage = lazy(() => import("@/pages/Projects"));
 const AboutPage = lazy(() => import("@/pages/About"));
 const BlogPage = lazy(() => import("@/pages/Blog"));
+const BlogListPage = lazy(() => import("@/pages/BlogList")); // New Blog List page
+const BlogPostPage = lazy(() => import("@/pages/BlogPost")); // New Blog Post detail page
 const CreateArticlePage = lazy(() => import("@/pages/CreateArticle"));
+const LoginPage = lazy(() => import("@/pages/Login"));
+const RegisterPage = lazy(() => import("@/pages/Register"));
+const AdminDashboardPage = lazy(() => import("@/pages/AdminDashboard"));
 
 // Fallback loading component for route transitions
 const PageLoader = () => (
@@ -34,8 +41,13 @@ function Router() {
         <Route path="/" component={Home} />
         <Route path="/projects" component={ProjectsPage} />
         <Route path="/about" component={AboutPage} />
-        <Route path="/blog" component={BlogPage} />
+        <Route path="/blog" component={BlogListPage} />
+        <Route path="/blog/:slug" component={BlogPostPage} />
+        <Route path="/login" component={LoginPage} />
+        <Route path="/register" component={RegisterPage} />
         <Route path="/create-article" component={CreateArticlePage} />
+        <Route path="/admin" component={AdminDashboardPage} />
+        <Route path="/admin/edit-article/:slug" component={CreateArticlePage} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
@@ -78,20 +90,24 @@ function App() {
   };
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <TooltipProvider>
-          {loading && <LoadingIndicator isLoading={loading} />}
-          <ErrorBoundary onError={handleError}>
-            <PageViewTracker debug={process.env.NODE_ENV !== "production"}>
-              <Router />
-            </PageViewTracker>
-          </ErrorBoundary>
-          <Toaster />
-          <Analytics debug={process.env.NODE_ENV !== "production"} />
-        </TooltipProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <ThemeProvider>
+            <TooltipProvider>
+              {loading && <LoadingIndicator isLoading={loading} />}
+              <ErrorBoundary onError={handleError}>
+                <PageViewTracker debug={process.env.NODE_ENV !== "production"}>
+                  <Router />
+                </PageViewTracker>
+              </ErrorBoundary>
+              <Toaster />
+              <Analytics debug={process.env.NODE_ENV !== "production"} />
+            </TooltipProvider>
+          </ThemeProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 }
 

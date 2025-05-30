@@ -7,12 +7,35 @@ import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "wouter";
 import { useTrackedCallback } from "@/hooks/use-memo-callback";
 import { a11y } from "@/lib/a11y";
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Navbar = memo(function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const [location] = useLocation();
+  const { user, isAuthenticated, isAdmin, logout } = useAuth();
+
+  // Get user initials for avatar fallback
+  const getUserInitials = () => {
+    if (!user || !user.name) return "U";
+
+    const nameParts = user.name.split(" ");
+    if (nameParts.length === 1) return nameParts[0].charAt(0).toUpperCase();
+
+    return (
+      nameParts[0].charAt(0) + nameParts[nameParts.length - 1].charAt(0)
+    ).toUpperCase();
+  };
 
   // Handle scroll events to update navbar styling
   useEffect(() => {
@@ -25,9 +48,13 @@ const Navbar = memo(function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const toggleMenu = useTrackedCallback(() => {
-    setIsMenuOpen(!isMenuOpen);
-  }, [isMenuOpen], 'toggleMenu');
+  const toggleMenu = useTrackedCallback(
+    () => {
+      setIsMenuOpen(!isMenuOpen);
+    },
+    [isMenuOpen],
+    "toggleMenu"
+  );
 
   return (
     <header
@@ -69,22 +96,85 @@ const Navbar = memo(function Navbar() {
           </ul>
         </nav>
 
-        {/* Theme Toggle */}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={toggleTheme}
-          className="hidden md:flex text-custom-secondary hover:text-custom-accent3 hover:bg-transparent" // Use new theme colors
-          {...a11y.button({
-            'aria-label': theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode',
-          })}
-        >
-          <FontAwesomeIcon
-            icon={theme === "dark" ? "sun" : "moon"}
-            className="h-5 w-5"
-            aria-hidden="true"
-          />
-        </Button>
+        {/* Right side actions */}
+        <div className="hidden md:flex items-center space-x-4">
+          {/* Theme Toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="text-custom-secondary hover:text-custom-accent3 hover:bg-transparent" // Use new theme colors
+            {...a11y.button({
+              "aria-label":
+                theme === "dark"
+                  ? "Switch to light mode"
+                  : "Switch to dark mode",
+            })}
+          >
+            <FontAwesomeIcon
+              icon={theme === "dark" ? "sun" : "moon"}
+              className="h-5 w-5"
+              aria-hidden="true"
+            />
+          </Button>
+
+          {/* Authentication */}
+          {isAuthenticated ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="relative h-8 w-8 rounded-full"
+                >
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage
+                      src={user?.image || ""}
+                      alt={user?.name || "User"}
+                    />
+                    <AvatarFallback>{getUserInitials()}</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      {user?.name}
+                    </p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {user?.email}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/profile">Profile</Link>
+                </DropdownMenuItem>
+                {isAdmin && (
+                  <DropdownMenuItem asChild>
+                    <Link href="/admin">Admin Dashboard</Link>
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={logout}
+                  className="text-red-600 cursor-pointer"
+                >
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <div className="flex items-center space-x-2">
+              <Button variant="ghost" asChild>
+                <Link href="/login">Log in</Link>
+              </Button>
+              <Button variant="default" asChild>
+                <Link href="/register">Sign up</Link>
+              </Button>
+            </div>
+          )}
+        </div>
 
         {/* Mobile Menu Button */}
         <Button
@@ -93,9 +183,9 @@ const Navbar = memo(function Navbar() {
           onClick={toggleMenu}
           className="md:hidden text-custom-secondary hover:text-custom-accent3 hover:bg-transparent" // Use new theme colors
           {...a11y.button({
-            'aria-label': isMenuOpen ? 'Close menu' : 'Open menu',
-            'aria-expanded': isMenuOpen,
-            'aria-controls': 'mobile-menu',
+            "aria-label": isMenuOpen ? "Close menu" : "Open menu",
+            "aria-expanded": isMenuOpen,
+            "aria-controls": "mobile-menu",
           })}
         >
           <FontAwesomeIcon icon="bars" className="h-5 w-5" aria-hidden="true" />

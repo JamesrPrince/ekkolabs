@@ -33,7 +33,7 @@ export async function getPosts(req: Request, res: Response) {
             id: true,
             username: true,
             name: true,
-            avatar: true,
+            image: true, // Using 'image' field from schema instead of 'avatar'
           },
         },
         category: true,
@@ -44,11 +44,23 @@ export async function getPosts(req: Request, res: Response) {
       take: limit,
     });
 
+    // Add readTime calculation for each post
+    const postsWithReadTime = posts.map((post: any) => {
+      // Simple calculation: average reading speed of 225 words per minute
+      const words = post.content ? post.content.split(/\s+/).length : 0;
+      const minutes = Math.max(1, Math.ceil(words / 225));
+
+      return {
+        ...post,
+        readTime: `${minutes} min read`,
+      };
+    });
+
     // Get total count for pagination
     const total = await prisma.post.count({ where });
 
     return res.status(200).json({
-      data: posts,
+      data: postsWithReadTime, // Return posts with readTime included
       meta: {
         currentPage: page,
         pageSize: limit,
@@ -77,7 +89,7 @@ export async function getPostBySlug(req: Request, res: Response) {
             id: true,
             username: true,
             name: true,
-            avatar: true,
+            image: true, // Using 'image' field from schema instead of 'avatar'
           },
         },
         category: true,
@@ -91,7 +103,16 @@ export async function getPostBySlug(req: Request, res: Response) {
       });
     }
 
-    return res.status(200).json({ data: post });
+    // Add read time calculation
+    const words = post.content ? post.content.split(/\s+/).length : 0;
+    const minutes = Math.max(1, Math.ceil(words / 225));
+
+    const postWithReadTime = {
+      ...post,
+      readTime: `${minutes} min read`,
+    };
+
+    return res.status(200).json({ data: postWithReadTime });
   } catch (error) {
     console.error("Error fetching post by slug:", error);
     return res.status(500).json({
